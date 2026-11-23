@@ -21,6 +21,18 @@ const kmMessages = {
   actionStartPractice: "ចាប់ផ្តើមអនុវត្ត",
   actionListenAgain: "ស្តាប់ម្តងទៀត",
   actionCheckAnswer: "ពិនិត្យចម្លើយ",
+  navHome: "ទំព័រដើម",
+  navPreviewLesson: "មើលគំរូមេរៀន៖ បង្កើតដប់",
+  previewBannerLabel: "ទំព័រពិនិត្យមេរៀនសម្រាប់គ្រូ និងអ្នកអភិវឌ្ឍ",
+  reviewMathLabel: "គណិតវិទ្យា",
+  reviewKhmerLabel: "ភាសាខ្មែរ",
+  reviewApproved: "បានអនុម័ត",
+  reviewDraft: "កំពុងពិនិត្យ",
+  stepLabel: "ជំហាន",
+  hintsHeading: "ជំនួយតាមលំដាប់",
+  misconceptionsHeading: "សារណែនាំពេលឆ្លើយខុសញឹកញាប់",
+  correctFeedbackHeading: "សារពេលឆ្លើយត្រូវ",
+  mathTermsHeading: "ពាក្យគណិតវិទ្យា",
 } as const;
 
 export type MessageKey = keyof typeof kmMessages;
@@ -41,6 +53,18 @@ const enMessages: Messages = {
   actionStartPractice: "Start Practice",
   actionListenAgain: "Listen Again",
   actionCheckAnswer: "Check Answer",
+  navHome: "Home",
+  navPreviewLesson: "Preview Lesson: Make Ten",
+  previewBannerLabel: "Lesson Review Preview (Teacher & Developer)",
+  reviewMathLabel: "Math",
+  reviewKhmerLabel: "Khmer",
+  reviewApproved: "Approved",
+  reviewDraft: "Draft",
+  stepLabel: "Step",
+  hintsHeading: "Progressive Hints",
+  misconceptionsHeading: "Misconception Feedback",
+  correctFeedbackHeading: "Correct Feedback",
+  mathTermsHeading: "Math Terms",
 };
 
 const dictionaries: Record<Locale, Messages> = {

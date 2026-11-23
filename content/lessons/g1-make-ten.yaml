@@ -1,0 +1,258 @@
+id: g1-make-ten
+version: 1
+title:
+  km: "បង្កើតដប់"
+  en: "Make 5, Make 10"
+grade: 1
+strand: number-sense
+moeysRef:
+  - "G1-U7"
+skills:
+  - bond-10
+prerequisites:
+  - count-0-10
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-dinner-plates
+    type: intro
+    text:
+      km: "ម៉ាក់រៀបចំអាហារពេលល្ងាចសម្រាប់គ្រួសារ ហើយត្រូវការចាន ១០។ តើយើងត្រូវថែមចានប៉ុន្មានទៀត?"
+      en: "Mom is setting dinner for the family and needs 10 plates. How many more plates do we need?"
+    image: dinner-plates-ten
+    audio: auto
+
+  - id: explore-ten-frame
+    type: explore
+    activity: ten-frame
+    mode: fill
+    prompt:
+      km: "សាកល្បងចុចប្រអប់ដប់ ដើម្បីដាក់ផ្លែស្វាយឱ្យពេញ ១០។"
+      en: "Tap cells in the ten-frame to fill up to 10 mangoes."
+    params:
+      given: 6
+      target: 10
+    audio: auto
+
+  - id: attempt-ten-frame-complete
+    type: activity
+    activity: ten-frame
+    mode: complete
+    supports: full
+    prompt:
+      km: "មានផ្លែស្វាយ {given} រួចហើយ។ ចុចបន្ថែមផ្លែស្វាយឱ្យគ្រប់ ១០។"
+      en: "There are {given} mangoes already. Tap to add enough mangoes to make 10."
+    params:
+      given:
+        randInt: [3, 8]
+      target: 10
+    answer:
+      kind: equals
+      expr: "10 - given"
+    feedback:
+      correct:
+        km: "ល្អណាស់! {given} បូក {answer} ស្មើ ១០។"
+        en: "Great work! {given} plus {answer} equals 10."
+      incorrect:
+        km: "ជិតត្រូវហើយ! សាករាប់ប្រអប់ទទេម្តងទៀត។"
+        en: "Almost! Try counting the empty boxes again."
+      misconceptions:
+        - id: copied-given
+          when:
+            equals: "given"
+          text:
+            km: "មើលប្រអប់ទទេ — រាប់តែប្រអប់ដែលនៅទទេប៉ុណ្ណោះ។"
+            en: "Look at the empty boxes — count only the empty cells."
+        - id: off-by-one-high
+          when:
+            equals: "10 - given + 1"
+          text:
+            km: "លើសមួយហើយ! ដកចេញមួយវិញដើម្បីឱ្យគ្រប់ ១០។"
+            en: "That is one too many! Take away one to make 10."
+    hints:
+      - km: "រាប់ប្រអប់ដែលនៅទទេនៅក្នុងតារាងដប់។"
+        en: "Count the empty cells in the ten-frame."
+      - km: "ចាប់ផ្តើមពី {given} ហើយរាប់បន្តដល់ ១០។"
+        en: "Start from {given} and count on to 10."
+      - km: "មើលប្រអប់ទទេដែលបង្ហាញពណ៌ភ្លឺ។"
+        en: "Look at the highlighted empty boxes."
+        show: highlight-empty-cells
+    audio: auto
+
+  - id: explain-make-ten
+    type: explain
+    text:
+      km: "តារាងដប់មាន ២ ជួរ មួយជួរមាន ៥។ ពេលយើងដឹងចំនួនដែលមាន យើងរាប់ប្រអប់ទទេដើម្បីរកគូបង្កើត ១០។ ឧទាហរណ៍ ៧ និង ៣ ស្មើ ១០។"
+      en: "A ten-frame has 2 rows of 5. Counting the empty boxes finds the partner that makes 10. For example, 7 and 3 make 10."
+    visual:
+      activity: ten-frame
+      mode: read
+      params:
+        given: 7
+        target: 10
+    mathTerms:
+      - km: "គូបង្កើត ១០"
+        en: "Number bonds to 10"
+      - km: "តារាងដប់"
+        en: "Ten-frame"
+    audio: auto
+
+  - id: practice-tuktuk-number-line
+    type: activity
+    activity: number-line
+    mode: jump
+    supports: partial
+    prompt:
+      km: "កង់បីកំពុងនៅចំណតលេខ {start}។ តើត្រូវលោតទៅមុខប៉ុន្មានជំហានដើម្បីដល់ចំណតលេខ ១០?"
+      en: "The tuk-tuk is at stop {start}. How many hops forward to reach stop 10?"
+    params:
+      start:
+        randInt: [2, 8]
+      target: 10
+      max: 10
+    answer:
+      kind: equals
+      expr: "10 - start"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! ពី {start} លោត {answer} ជំហាន ដល់ ១០។"
+        en: "Well done! From {start}, hopping {answer} steps reaches 10."
+      incorrect:
+        km: "សាករាប់ចំនួនជំហានដែលកង់បីលោតទៅមុខម្តងទៀត។"
+        en: "Try counting the hops forward again."
+      misconceptions:
+        - id: counted-start-point
+          when:
+            equals: "10 - start + 1"
+          text:
+            km: "កុំរាប់ចំណតដែលកង់បីឈរស្រាប់ — រាប់តែជំហានលោតទៅមុខ។"
+            en: "Do not count the starting stop — count only the hops forward."
+    hints:
+      - km: "រាប់ជំហានលោតម្តងមួយៗពី {start} ទៅ ១០។"
+        en: "Count one hop at a time from {start} to 10."
+      - km: "ចាប់ផ្តើមរាប់ជំហានទី ១ ពេលលោតផុតពី {start}។"
+        en: "Count hop 1 after leaving {start}."
+      - km: "មើលខ្សែកោងជំហានលោតនៅលើបន្ទាត់ចំនួន។"
+        en: "Follow the jump arcs shown on the number line."
+        show: show-jump-arcs
+    audio: auto
+
+  - id: practice-equation-partial
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: partial
+    prompt:
+      km: "បំពេញលេខដែលបាត់ដើម្បីបង្កើតបាន ១០។"
+      en: "Fill in the missing number to make 10."
+    params:
+      a:
+        randInt: [2, 8]
+    template: "{a} + □ = 10"
+    answer:
+      kind: equals
+      expr: "10 - a"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! {a} + {answer} = ១០។"
+        en: "Correct! {a} + {answer} = 10."
+      misconceptions:
+        - id: copied-addend
+          when:
+            equals: "a"
+          text:
+            km: "លេខ {a} មានរួចហើយ — រកលេខដែលថែមចូលដើម្បីបាន ១០។"
+            en: "{a} is already there — find the number to add to reach 10."
+    hints:
+      - km: "គិតថាតើត្រូវថែមប៉ុន្មានលើ {a} ដើម្បីបាន ១០?"
+        en: "How many do you add to {a} to make 10?"
+      - km: "រាប់បន្តពី {a} ដោយប្រើម្រាមដៃរហូតដល់ ១០។"
+        en: "Count on from {a} to 10."
+      - km: "ប្រើរូបតារាងដប់ជួយមើលប្រអប់ទទេ។"
+        en: "Use the ten-frame visual to see the remaining spaces."
+        show: highlight-ten-frame-model
+    audio: auto
+
+  - id: challenge-abstract-equation
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: none
+    prompt:
+      km: "សាកល្បងដោះស្រាយដោយខ្លួនឯង៖ រកលេខដែលបាត់។"
+      en: "Try solving on your own: find the missing number."
+    params:
+      a:
+        randInt: [1, 9]
+    template: "{a} + □ = 10"
+    answer:
+      kind: equals
+      expr: "10 - a"
+    feedback:
+      correct:
+        km: "អស្ចារ្យ! អ្នកចេះគូបង្កើត ១០ ហើយ៖ {a} + {answer} = ១០។"
+        en: "Awesome! You know your bonds to 10: {a} + {answer} = 10."
+      misconceptions:
+        - id: answered-ten
+          when:
+            equals: "10"
+          text:
+            km: "១០ ជាផលបូកសរុប — យើងត្រូវរកលេខដែលបូកជាមួយ {a}។"
+            en: "10 is the total — we need the number added to {a}."
+    hints:
+      - km: "រាប់បន្តពី {a} រហូតដល់ ១០។"
+        en: "Count on from {a} up to 10."
+      - km: "តើ {a} ខ្វះប៉ុន្មានទៀតទើបគ្រប់ ១០?"
+        en: "How many more does {a} need to reach 10?"
+      - km: "បើករូបតារាងដប់ដើម្បីមើលគូបង្កើត ១០។"
+        en: "Reveal the ten-frame model to see the partner to 10."
+        show: highlight-ten-frame-model
+    audio: auto
+
+  - id: mastery-check-bond-10
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ បំពេញចំនួនដែលបង្កើតបាន ១០។"
+      en: "Mastery check: fill in the number that makes 10."
+    params:
+      a:
+        randInt: [1, 9]
+    template: "□ + {a} = 10"
+    answer:
+      kind: equals
+      expr: "10 - a"
+    feedback:
+      correct:
+        km: "ជោគជ័យ! {answer} + {a} = ១០។ ធ្វើបានល្អណាស់!"
+        en: "Success! {answer} + {a} = 10. Great job!"
+      misconceptions:
+        - id: copied-addend
+          when:
+            equals: "a"
+          text:
+            km: "ពិនិត្យម្តងទៀត — រកលេខដែលបូកជាមួយ {a} ស្មើ ១០។"
+            en: "Check again — find the number that adds with {a} to make 10."
+    hints:
+      - km: "លំដាប់បូកដូរគ្នាក៏ផលបូកនៅតែ ១០ ដដែល។"
+        en: "Changing the order still makes 10."
+      - km: "រាប់បន្តពី {a} ដល់ ១០។"
+        en: "Count on from {a} to 10."
+      - km: "មើលតារាងដប់ដើម្បីផ្ទៀងផ្ទាត់គូបង្កើត ១០។"
+        en: "Check the ten-frame visual to confirm the bond to 10."
+        show: highlight-ten-frame-model
+    audio: auto
+
+review:
+  items:
+    - attempt-ten-frame-complete
+    - practice-tuktuk-number-line
+    - challenge-abstract-equation
+    - mastery-check-bond-10
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review (Milestone 1 Step 7)"

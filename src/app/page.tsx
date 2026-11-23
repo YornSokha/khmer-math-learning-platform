@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
 import { NumeralToggle } from "@/components/khmer/NumeralToggle";
 import { t } from "@/lib/i18n/messages";
@@ -90,6 +91,12 @@ export default function HomePage() {
           >
             {t("actionCheckAnswer")}
           </button>
+          <Link
+            href="/preview/g1-make-ten"
+            className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-accent bg-accent-soft px-5 py-2.5 text-khmer-body font-semibold leading-[1.75] text-accent overflow-visible transition-colors hover:bg-accent hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            {t("navPreviewLesson")}
+          </Link>
         </div>
       </section>
     </main>

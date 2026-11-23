@@ -23,6 +23,9 @@ jobs:
       - name: Lint and format check
         run: npm run lint
 
+      - name: Validate lesson content
+        run: npm run content:validate
+
       - name: Unit and component tests
         run: npm test
 
