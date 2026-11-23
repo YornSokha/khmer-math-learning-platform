@@ -33,6 +33,18 @@ const kmMessages = {
   misconceptionsHeading: "សារណែនាំពេលឆ្លើយខុសញឹកញាប់",
   correctFeedbackHeading: "សារពេលឆ្លើយត្រូវ",
   mathTermsHeading: "ពាក្យគណិតវិទ្យា",
+  keypadLabel: "ក្តារចុចលេខ",
+  keypadClear: "សម្អាត",
+  keypadBackspace: "លុប",
+  tenFrameLabel: "តារាងដប់",
+  tenFrameAddedCount: "បានបន្ថែម",
+  tenFrameTotalCount: "សរុប",
+  numberLineLabel: "បន្ទាត់ចំនួន",
+  numberLineHopForward: "លោតទៅមុខ +១",
+  numberLineHopBack: "ថយក្រោយ -១",
+  numberLineHopsCount: "ចំនួនជំហាន",
+  equationAnswerPlaceholder: "ចុចលេខខាងក្រោម",
+  equationVisualModelLabel: "រូបជំនួយតារាងដប់",
 } as const;
 
 export type MessageKey = keyof typeof kmMessages;
@@ -65,6 +77,18 @@ const enMessages: Messages = {
   misconceptionsHeading: "Misconception Feedback",
   correctFeedbackHeading: "Correct Feedback",
   mathTermsHeading: "Math Terms",
+  keypadLabel: "Numeric keypad",
+  keypadClear: "Clear",
+  keypadBackspace: "Delete",
+  tenFrameLabel: "Ten-frame",
+  tenFrameAddedCount: "Added",
+  tenFrameTotalCount: "Total",
+  numberLineLabel: "Number line",
+  numberLineHopForward: "Hop +1",
+  numberLineHopBack: "Back -1",
+  numberLineHopsCount: "Hops",
+  equationAnswerPlaceholder: "Tap a number below",
+  equationVisualModelLabel: "Ten-frame visual helper",
 };
 
 const dictionaries: Record<Locale, Messages> = {

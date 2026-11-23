@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const isCI = Boolean(process.env.CI);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
+const port = new URL(baseURL).port || "3000";
 
 export default defineConfig({
   testDir: "./e2e",
@@ -27,7 +28,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: isCI ? "npm run start" : "npm run dev",
+    command: isCI ? `npx next start -p ${port}` : `npx next dev -p ${port}`,
     url: baseURL,
     reuseExistingServer: !isCI,
     timeout: 120_000,
