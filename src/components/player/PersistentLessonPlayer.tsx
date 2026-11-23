@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
+import { useActiveChild } from "@/components/parent/ActiveChildProvider";
 import {
   LessonPlayer,
   type LessonAttemptEvent,
@@ -10,26 +11,41 @@ import {
 import type { Lesson } from "@/lib/content/schema";
 import { t } from "@/lib/i18n/messages";
 import { recordAttempt, recordLessonCompletion } from "@/lib/storage/progress-db";
+import { syncLocalAttemptsForChild } from "@/lib/storage/sync-client";
 
 export interface PersistentLessonPlayerProps {
   lesson: Lesson;
 }
 
 export function PersistentLessonPlayer({ lesson }: PersistentLessonPlayerProps) {
+  const { activeChild } = useActiveChild();
+  const activeChildId = activeChild?.id;
   const [savedAttempts, setSavedAttempts] = useState(0);
   const [completionSaved, setCompletionSaved] = useState(false);
 
-  const handleAttempt = useCallback((attempt: LessonAttemptEvent) => {
-    void recordAttempt(attempt).then(() => {
-      setSavedAttempts((count) => count + 1);
-    });
-  }, []);
+  const handleAttempt = useCallback(
+    (attempt: LessonAttemptEvent) => {
+      void recordAttempt(attempt).then(() => {
+        setSavedAttempts((count) => count + 1);
+        if (activeChildId) {
+          void syncLocalAttemptsForChild(activeChildId);
+        }
+      });
+    },
+    [activeChildId],
+  );
 
-  const handleComplete = useCallback((summary: LessonCompletionEvent) => {
-    void recordLessonCompletion(summary).then(() => {
-      setCompletionSaved(true);
-    });
-  }, []);
+  const handleComplete = useCallback(
+    (summary: LessonCompletionEvent) => {
+      void recordLessonCompletion(summary).then(() => {
+        setCompletionSaved(true);
+        if (activeChildId) {
+          void syncLocalAttemptsForChild(activeChildId);
+        }
+      });
+    },
+    [activeChildId],
+  );
 
   return (
     <div className="pb-6">

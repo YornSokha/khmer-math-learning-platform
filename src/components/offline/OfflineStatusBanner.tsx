@@ -1,7 +1,9 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+import { useActiveChild } from "@/components/parent/ActiveChildProvider";
 import { t } from "@/lib/i18n/messages";
+import { syncLocalAttemptsForChild } from "@/lib/storage/sync-client";
 
 function subscribeOnlineStatus(callback: () => void): () => void {
   if (typeof window === "undefined") {
@@ -27,11 +29,19 @@ function getServerOnlineSnapshot(): boolean {
 }
 
 export function OfflineStatusBanner() {
+  const { activeChild } = useActiveChild();
   const isOnline = useSyncExternalStore(
     subscribeOnlineStatus,
     getOnlineSnapshot,
     getServerOnlineSnapshot,
   );
+
+  useEffect(() => {
+    if (!isOnline || !activeChild?.id) {
+      return;
+    }
+    void syncLocalAttemptsForChild(activeChild.id);
+  }, [isOnline, activeChild?.id]);
 
   if (isOnline) {
     return null;

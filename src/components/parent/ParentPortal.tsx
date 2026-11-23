@@ -3,16 +3,24 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useCallback, useEffect, useState } from "react";
+import { FormattedNumber } from "@/components/khmer/FormattedNumber";
 import { t } from "@/lib/i18n/messages";
 import type { NumeralSystem } from "@/lib/khmer/numerals";
+import type { ParentProgressSummary } from "@/lib/mastery/scheduler";
 import type { PublicChildProfile, PublicParent } from "@/lib/server/store";
 import type { ChildAvatarId } from "@/lib/server/validation";
+import { getPendingAttempts } from "@/lib/storage/progress-db";
+import { syncLocalAttemptsForChild } from "@/lib/storage/sync-client";
 import { useActiveChild } from "./ActiveChildProvider";
 import { CHILD_AVATARS, ChildAvatar } from "./ChildAvatar";
 
 interface AuthMeResponse {
   parent: PublicParent | null;
   children: PublicChildProfile[];
+}
+
+interface ChildProgressResponse {
+  summary: ParentProgressSummary;
 }
 
 export function ParentPortal() {
@@ -22,6 +30,11 @@ export function ParentPortal() {
   const [loading, setLoading] = useState(true);
   const [parent, setParent] = useState<PublicParent | null>(null);
   const [children, setChildren] = useState<PublicChildProfile[]>([]);
+  const [progressByChildId, setProgressByChildId] = useState<Record<string, ParentProgressSummary>>(
+    {},
+  );
+  const [pendingLocalCount, setPendingLocalCount] = useState(0);
+  const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
   // Auth form state
   const [authTab, setAuthTab] = useState<"signup" | "login">("signup");
@@ -40,6 +53,36 @@ export function ParentPortal() {
   const [submittingChild, setSubmittingChild] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
+  const loadChildrenProgress = useCallback(async (childList: PublicChildProfile[]) => {
+    const entries = await Promise.all(
+      childList.map(async (child) => {
+        try {
+          const res = await fetch(`/api/children/${child.id}/progress`, {
+            credentials: "same-origin",
+          });
+          if (!res.ok) return null;
+          const data = (await res.json()) as ChildProgressResponse;
+          return [child.id, data.summary] as const;
+        } catch {
+          return null;
+        }
+      }),
+    );
+
+    const map: Record<string, ParentProgressSummary> = {};
+    for (const entry of entries) {
+      if (entry) {
+        map[entry[0]] = entry[1];
+      }
+    }
+    setProgressByChildId(map);
+  }, []);
+
+  const refreshPendingLocalCount = useCallback(async () => {
+    const pending = await getPendingAttempts();
+    setPendingLocalCount(pending.length);
+  }, []);
+
   const loadSession = useCallback(async () => {
     try {
       const res = await fetch("/api/auth/me", { credentials: "same-origin" });
@@ -49,10 +92,14 @@ export function ParentPortal() {
       const data = (await res.json()) as AuthMeResponse;
       setParent(data.parent);
       setChildren(data.children);
+      if (data.parent && data.children.length > 0) {
+        await loadChildrenProgress(data.children);
+      }
+      await refreshPendingLocalCount();
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadChildrenProgress, refreshPendingLocalCount]);
 
   useEffect(() => {
     void loadSession();
@@ -86,9 +133,14 @@ export function ParentPortal() {
         return;
       }
 
+      const nextChildren = data.children ?? [];
       setParent(data.parent);
-      setChildren(data.children ?? []);
+      setChildren(nextChildren);
       setPassword("");
+      if (nextChildren.length > 0) {
+        await loadChildrenProgress(nextChildren);
+      }
+      await refreshPendingLocalCount();
     } catch {
       setAuthError(t("parentErrorGeneric"));
     } finally {
@@ -100,6 +152,7 @@ export function ParentPortal() {
     await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
     setParent(null);
     setChildren([]);
+    setProgressByChildId({});
     setActiveChild(null);
   }
 
@@ -130,11 +183,13 @@ export function ParentPortal() {
         return;
       }
 
-      setChildren((prev) => [...prev, data.child!]);
+      const nextChildren = [...children, data.child];
+      setChildren(nextChildren);
       setNickname("");
       setAvatarId("mango");
       setGrade(1);
       setNumeralPref("khmer");
+      await loadChildrenProgress([data.child]);
     } catch {
       setChildError(t("parentErrorGeneric"));
     } finally {
@@ -167,10 +222,25 @@ export function ParentPortal() {
     if (!res.ok) return;
 
     setChildren((prev) => prev.filter((item) => item.id !== childId));
+    setProgressByChildId((prev) => {
+      const next = { ...prev };
+      delete next[childId];
+      return next;
+    });
     if (activeChild?.id === childId) {
       setActiveChild(null);
     }
     setConfirmDeleteId(null);
+  }
+
+  async function handleSyncPendingNow() {
+    if (!activeChild?.id) return;
+    const outcome = await syncLocalAttemptsForChild(activeChild.id);
+    setPendingLocalCount(outcome.remainingPendingCount);
+    if (outcome.status === "synced") {
+      setSyncNotice(t("parentSyncSuccessNote"));
+      await loadChildrenProgress(children);
+    }
   }
 
   function handleHandDeviceToChild(child: PublicChildProfile) {
@@ -335,11 +405,26 @@ export function ParentPortal() {
         <div className="space-y-6">
           <section
             data-testid="parent-account-summary"
-            className="rounded-2xl border border-border bg-surface-card p-5 shadow-xs"
+            className="space-y-3 rounded-2xl border border-border bg-surface-card p-5 shadow-xs"
           >
             <p className="text-khmer-body text-ink-muted">
               {t("parentSignedInAs")}: <strong className="text-ink">{parent.email}</strong>
             </p>
+            {pendingLocalCount > 0 && activeChild && (
+              <button
+                type="button"
+                data-testid="parent-sync-now-button"
+                onClick={() => void handleSyncPendingNow()}
+                className="inline-flex min-h-touch items-center justify-center rounded-xl border border-accent bg-accent-soft px-4 py-2 text-khmer-body font-semibold leading-[1.75] text-accent overflow-visible hover:bg-accent hover:text-white"
+              >
+                {t("parentSyncPendingButton")} (<FormattedNumber value={pendingLocalCount} />)
+              </button>
+            )}
+            {syncNotice && (
+              <p className="text-sm font-medium text-emerald-700" role="status">
+                {syncNotice}
+              </p>
+            )}
           </section>
 
           <section
@@ -355,16 +440,17 @@ export function ParentPortal() {
                 {t("parentNoChildrenYet")}
               </p>
             ) : (
-              <ul className="space-y-3" data-testid="parent-children-list">
+              <ul className="space-y-4" data-testid="parent-children-list">
                 {children.map((child) => {
                   const isActive = activeChild?.id === child.id;
                   const confirmingDelete = confirmDeleteId === child.id;
+                  const summary = progressByChildId[child.id];
 
                   return (
                     <li
                       key={child.id}
                       data-testid={`child-card-${child.id}`}
-                      className={`space-y-3 rounded-2xl border p-4 ${
+                      className={`space-y-4 rounded-2xl border p-4 ${
                         isActive ? "border-accent bg-accent-soft/40" : "border-border bg-surface"
                       }`}
                     >
@@ -389,6 +475,66 @@ export function ParentPortal() {
                           </p>
                         </div>
                       </div>
+
+                      {summary && (
+                        <div
+                          data-testid={`child-progress-${child.id}`}
+                          className="space-y-2 rounded-xl border border-border bg-surface-card p-3.5"
+                        >
+                          <p className="text-sm font-semibold text-accent">
+                            {t("parentProgressHeading")}
+                          </p>
+                          {summary.totalAttempts === 0 ? (
+                            <p className="text-sm text-ink-muted">{t("parentNoActivityYet")}</p>
+                          ) : (
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div className="rounded-lg bg-surface p-2">
+                                <p className="text-ink-muted">{t("parentMasteredSkillsLabel")}</p>
+                                <p
+                                  data-testid={`child-mastered-count-${child.id}`}
+                                  className="text-khmer-body font-bold text-emerald-700"
+                                >
+                                  <FormattedNumber value={summary.masteredSkills.length} />
+                                </p>
+                              </div>
+                              <div className="rounded-lg bg-surface p-2">
+                                <p className="text-ink-muted">{t("parentPracticeSkillsLabel")}</p>
+                                <p
+                                  data-testid={`child-practice-count-${child.id}`}
+                                  className="text-khmer-body font-bold text-ink"
+                                >
+                                  <FormattedNumber value={summary.practiceSkills.length} />
+                                </p>
+                              </div>
+                              <div className="rounded-lg bg-surface p-2">
+                                <p className="text-ink-muted">{t("parentMinutesTodayLabel")}</p>
+                                <p
+                                  data-testid={`child-minutes-today-${child.id}`}
+                                  className="text-khmer-body font-bold text-ink"
+                                >
+                                  <FormattedNumber value={summary.minutesToday} />
+                                </p>
+                              </div>
+                              <div className="rounded-lg bg-surface p-2">
+                                <p className="text-ink-muted">{t("parentMinutesWeekLabel")}</p>
+                                <p
+                                  data-testid={`child-minutes-week-${child.id}`}
+                                  className="text-khmer-body font-bold text-ink"
+                                >
+                                  <FormattedNumber value={summary.minutesLast7Days} />
+                                </p>
+                              </div>
+                              <p
+                                data-testid={`child-attempts-count-${child.id}`}
+                                className="col-span-2 text-xs text-ink-muted"
+                              >
+                                {t("parentSyncedAttemptsLabel")}:{" "}
+                                <FormattedNumber value={summary.totalAttempts} />
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                       <div className="flex flex-wrap gap-2">
                         <button

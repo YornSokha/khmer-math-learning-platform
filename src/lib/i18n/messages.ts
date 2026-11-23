@@ -137,6 +137,15 @@ const kmMessages = {
   parentDeleteConfirmButton: "បញ្ជាក់លុបជាអចិន្ត្រៃយ៍",
   parentDeleteCancelButton: "បោះបង់",
   parentErrorGeneric: "មានបញ្ហាក្នុងការដំណើរការ។ សូមពិនិត្យព័ត៌មានហើយសាកល្បងម្តងទៀត។",
+  parentProgressHeading: "សង្ខេបវឌ្ឍនភាពកូន",
+  parentMasteredSkillsLabel: "ជំនាញបានចេះ",
+  parentPracticeSkillsLabel: "ជំនាញគួរអនុវត្តបន្ថែម",
+  parentMinutesTodayLabel: "នាទីរៀនថ្ងៃនេះ",
+  parentMinutesWeekLabel: "នាទីក្នុង ៧ ថ្ងៃ",
+  parentSyncedAttemptsLabel: "ការសាកល្បងបានរក្សាទុក",
+  parentNoActivityYet: "មិនទាន់មានសកម្មភាពរៀននៅឡើយទេ។",
+  parentSyncPendingButton: "ធ្វើសមកាលកម្មទិន្នន័យរង់ចាំ",
+  parentSyncSuccessNote: "បានធ្វើសមកាលកម្មវឌ្ឍនភាពរួចរាល់។",
 } as const;
 
 export type MessageKey = keyof typeof kmMessages;
@@ -275,6 +284,15 @@ const enMessages: Messages = {
   parentDeleteConfirmButton: "Confirm Permanent Delete",
   parentDeleteCancelButton: "Cancel",
   parentErrorGeneric: "Something went wrong. Please check your details and try again.",
+  parentProgressHeading: "Learning Overview",
+  parentMasteredSkillsLabel: "Skills mastered",
+  parentPracticeSkillsLabel: "Skills to practice",
+  parentMinutesTodayLabel: "Minutes today",
+  parentMinutesWeekLabel: "Minutes (7 days)",
+  parentSyncedAttemptsLabel: "Synced attempts",
+  parentNoActivityYet: "No synced learning activity yet.",
+  parentSyncPendingButton: "Sync pending offline progress",
+  parentSyncSuccessNote: "Progress synced cleanly.",
 };
 
 const dictionaries: Record<Locale, Messages> = {
