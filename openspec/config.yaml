@@ -1,0 +1,42 @@
+schema: spec-driven
+
+context: |
+  ## Tech Stack & Hosting
+  - Framework: Next.js (App Router), React, TypeScript, Tailwind CSS.
+  - Hosting: Vercel + managed PostgreSQL in Singapore.
+  - Database & ORM: PostgreSQL + Prisma 7. Store only parent accounts, child profiles, attempts, skill mastery/review state, and achievements—never lesson content.
+  - Lesson Content: Versioned YAML/JSON files in git, validated with Zod at build time. The engine implements reusable activity types; lessons are pure data with pure, unit-testable answer evaluation functions. Publish gate requires `reviewStatus.math: approved` and `reviewStatus.khmer: approved`.
+  - Visuals & Interaction: SVG + React + Pointer Events (`dnd-kit` or custom Pointer Events hook for drag-and-drop). Use CSS transitions (Motion only where needed) and respect `prefers-reduced-motion`. Keep per-lesson JS lightweight for mid/low-end Android Chrome.
+  - Offline PWA: Serwist (`@serwist/next`) precaching app shell, lessons, fonts, and audio; IndexedDB attempt queue with idempotent sync when online. (Use `next build --webpack` if Turbopack conflicts with Serwist.)
+  - Auth & Privacy: Parent account with explicit parental consent (under-16 protection) owning child profiles with no child PII (nickname, avatar, grade only). Support full deletion of a child's data. No third-party trackers.
+  - Testing: Vitest (schemas, pure evaluators, spaced-review scheduling), Testing Library (activity interactions), Playwright (360x800 mobile viewport and offline E2E).
+
+  ## Khmer Localization, Typography & Audio Rules
+  - Locale: Khmer-only UI at launch with `<html lang="km">`; English kept only as developer/QA fallback. Lesson copy lives in lesson content files, not UI dictionaries.
+  - Language quality: Natural Khmer reviewed by a Khmer primary teacher; never ship raw machine-translated wording.
+  - Fonts: Self-hosted `Kantumruy Pro` (fallback `Noto Sans Khmer`) via `next/font`, subset to Khmer + Latin. Use display faces (e.g., `Moul`) only for short headings. Never use desktop Khmer OS fonts on the web.
+  - Vertical metrics: Use `line-height: 1.7–1.8` for Khmer text, `>=18px` body text, and `>=24px` instruction text. Never clip text with fixed heights or `overflow: hidden` on buttons/labels so subscript consonants (coeng) and stacked vowels remain intact.
+  - Line breaking: Insert zero-width spaces (U+200B / ZWSP) at word boundaries during the content build step, never at runtime. Always strip ZWSP before evaluating answers.
+  - Numerals: Store numeric values as numbers. Default to Khmer numerals (`Intl.NumberFormat('km-KH', { numberingSystem: 'khmr' })`) for Grade 1, with a per-child `១២៣ / 123` toggle. Always accept both Khmer (`០–៩`) and Arabic (`0–9`) digits in answers.
+  - Input: Never rely on device Khmer keyboards for math answers; use a large on-screen numeric keypad (matching numeral setting) and tap/drag interactions.
+  - Audio: Required for all Grade 1 instructions. Pre-generate MP3s at build time (Azure `km-KH-SreymomNeural` / `km-KH-PisethNeural`), reviewed and human re-recorded where needed; cache offline; never call TTS at runtime.
+
+  ## 8-Step Lesson Template (CPA: Concrete -> Pictorial -> Abstract)
+  Every lesson follows this fixed sequence using culturally familiar Cambodian contexts (riel notes, local fruit, markets, tuk-tuks, family, krama patterns):
+  1. Hook problem (picture + audio introducing a concrete scenario).
+  2. Explore (manipulate a visual model before formal explanation).
+  3. Attempt (learner tries solving interactively).
+  4. Instant feedback (<=100 ms, with misconception-specific messages for common errors).
+  5. Progressive hints (up to 3 levels; the final hint reveals the visual model, not just the answer).
+  6. Visual explanation in simple Khmer (introducing 1–2 concise math terms).
+  7. Follow-up challenge (parameterized new numbers with supports faded or removed).
+  8. Mastery check feeding spaced review (skill mastered after 2 independent correct challenges in separate sessions; spaced review at 1, 3, 7, and 21 days).
+
+  ## Reward & Anti-Addiction Rules
+  1. XP is earned only from learning actions (completing attempts, fixing mistakes, review), never time spent.
+  2. No loss-framed streaks: track "days learned this week", allow automatic rest days, and never show "you'll lose your streak".
+  3. Achievements celebrate mastery and effort (e.g., fixing mistakes, mastering a skill).
+  4. Daily challenge has 1 item (~3 min) and is always skippable.
+  5. Every session ends at a natural stop point ("Great work, see you tomorrow") with no autoplay and no push notifications to children.
+  6. No leaderboards, ads, purchases, or social features in MVP.
+  7. Show time spent learning to parents, never as a gamified metric to children.
