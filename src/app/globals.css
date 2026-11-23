@@ -1,1 +1,59 @@
 @import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-kantumruy-pro), var(--font-noto-sans-khmer), sans-serif;
+
+  --text-khmer-body: 1.125rem;
+  --text-khmer-body--line-height: 1.75;
+
+  --text-khmer-instruction: 1.5rem;
+  --text-khmer-instruction--line-height: 1.75;
+
+  --text-khmer-heading: 1.875rem;
+  --text-khmer-heading--line-height: 1.7;
+
+  --text-khmer-display: 2.25rem;
+  --text-khmer-display--line-height: 1.7;
+
+  --spacing-touch: 3rem;
+
+  --color-surface: #fdfcf8;
+  --color-surface-card: #ffffff;
+  --color-border: #e2e8f0;
+  --color-ink: #1e293b;
+  --color-ink-muted: #475569;
+  --color-accent: #0f766e;
+  --color-accent-strong: #115e59;
+  --color-accent-soft: #f0fdfa;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-kantumruy-pro), var(--font-noto-sans-khmer), sans-serif;
+  }
+
+  body {
+    @apply bg-surface font-sans text-khmer-body text-ink;
+    line-height: 1.75;
+  }
+
+  button,
+  [role="button"] {
+    line-height: 1.75;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { NumeralPreferenceProvider } from "@/components/khmer/NumeralPreferenceProvider";
+import { kantumruyPro, notoSansKhmer } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,8 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="km">
-      <body className="min-h-screen bg-white text-slate-900 antialiased">{children}</body>
+    <html lang="km" className={`${kantumruyPro.variable} ${notoSansKhmer.variable}`}>
+      <body className="min-h-screen bg-surface font-sans text-khmer-body text-ink antialiased">
+        <NumeralPreferenceProvider>{children}</NumeralPreferenceProvider>
+      </body>
     </html>
   );
 }
