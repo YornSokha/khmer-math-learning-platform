@@ -34,3 +34,14 @@ The learning path SHALL allow a learner to open and replay any earlier lesson be
 #### Scenario: Learner placed at Lesson 6 can open Lesson 1 or Lesson 5
 - **WHEN** placement starts the learner at Lesson 6 (`g1-06-addition-10`)
 - **THEN** Lessons 1 through 5 remain `"available"` and clickable on `/learn` so the learner can revisit any earlier topic
+
+### Requirement: Optional, always-skippable 1-item Daily Challenge
+The child dashboard (`/learn`) SHALL display an optional Daily Challenge card linking to `/daily-challenge` containing exactly one date-seeded interactive problem (~3 minutes) that MAY be skipped at any time with zero penalty, zero loss-framed messaging, and a calm natural stop screen upon completion or skip.
+
+#### Scenario: Child completes the 1-item Daily Challenge and sees calm natural stop
+- **WHEN** a learner opens `/daily-challenge` and answers the single interactive problem correctly
+- **THEN** the attempt is recorded locally, the screen displays a calm natural stop message with a link back to `/learn` and no autoplay, and `/learn` marks today's challenge as completed
+
+#### Scenario: Child skips the Daily Challenge without penalty
+- **WHEN** a learner activates the skip button on the Daily Challenge card or `/daily-challenge`
+- **THEN** today's challenge is marked skipped for the current day with zero warning, zero streak-loss language, and no lockouts on `/learn`

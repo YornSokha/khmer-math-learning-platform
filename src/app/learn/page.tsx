@@ -9,6 +9,7 @@ export default function LearnPage() {
     moeysRef: lesson.moeysRef,
     estimatedMinutes: lesson.estimatedMinutes,
     skills: lesson.skills,
+    reviewItemIds: lesson.review.items,
   }));
 
   return <LearningPathView lessons={lessons} />;

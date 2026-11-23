@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAllLessons } from "@/lib/content/loader";
 import { computeParentProgressSummary } from "@/lib/mastery/scheduler";
+import { evaluateRewards } from "@/lib/rewards/engine";
 import { getAuthenticatedParent } from "@/lib/server/auth";
 import { getDataStore } from "@/lib/server/db";
 import { toPublicChildProfile } from "@/lib/server/store";
@@ -22,17 +23,41 @@ export async function GET(request: Request, context: ProgressRouteContext) {
     return NextResponse.json({ error: "Child profile not found" }, { status: 404 });
   }
 
-  const [attempts, skillStates] = await Promise.all([
+  const [attempts, skillStates, achievements] = await Promise.all([
     store.listAttemptsForChild(child.id),
     store.listSkillStatesForChild(child.id),
+    store.listAchievementsForChild(child.id),
   ]);
 
   const lessons = getAllLessons();
   const summary = computeParentProgressSummary(attempts, skillStates, lessons);
+  const rewardEval = evaluateRewards({
+    attempts: attempts.map((attempt) => ({
+      lessonId: attempt.lessonId,
+      stepId: attempt.stepId,
+      correct: attempt.correct,
+      hintsUsed: attempt.hintsUsed,
+      timestamp: attempt.attemptedAt,
+    })),
+    skillStates: skillStates.map((state) => ({
+      skillId: state.skillId,
+      masteredAt: state.masteredAt,
+      reviewStage: state.reviewStage,
+    })),
+  });
 
   return NextResponse.json({
     child: toPublicChildProfile(child),
     summary,
+    rewards: {
+      totalXp: rewardEval.totalXp,
+      daysLearnedThisWeek: rewardEval.daysLearnedThisWeek,
+      earnedAchievementIds: rewardEval.earnedAchievementIds,
+    },
+    achievements: achievements.map((award) => ({
+      achievementId: award.achievementId,
+      awardedAt: award.awardedAt.toISOString(),
+    })),
     skillStates: skillStates.map((state) => ({
       skillId: state.skillId,
       independentSessions: state.independentSessions,

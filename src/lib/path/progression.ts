@@ -9,6 +9,7 @@ export interface PathLessonSummary {
   moeysRef: string[];
   estimatedMinutes: number;
   skills: string[];
+  reviewItemIds?: string[];
 }
 
 export interface LearningPathNode extends PathLessonSummary {

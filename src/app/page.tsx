@@ -8,7 +8,10 @@ const GRADE_1_SAMPLE_NUMBERS = [0, 5, 7, 10, 100] as const;
 
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6">
+    <main
+      id="main-content"
+      className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-6 px-4 py-8 sm:px-6"
+    >
       <header className="space-y-2 text-center">
         <h1 className="text-khmer-heading font-bold text-ink">{t("appTitle")}</h1>
         <p className="text-khmer-body text-ink-muted">{t("appTagline")}</p>

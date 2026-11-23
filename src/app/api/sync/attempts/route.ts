@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAllLessons } from "@/lib/content/loader";
 import { applyAttemptToSkillState } from "@/lib/mastery/scheduler";
+import { evaluateRewards } from "@/lib/rewards/engine";
 import { getAuthenticatedParent } from "@/lib/server/auth";
 import { getDataStore } from "@/lib/server/db";
 import type { CreateAttemptInput } from "@/lib/server/store";
@@ -104,7 +105,29 @@ export async function POST(request: Request) {
     }
   }
 
-  const updatedStates = [...stateBySkillId.values()].map((state) => ({
+  const updatedStatesList = [...stateBySkillId.values()];
+  const allChildAttempts = await store.listAttemptsForChild(child.id);
+  const rewardEval = evaluateRewards({
+    attempts: allChildAttempts.map((attempt) => ({
+      lessonId: attempt.lessonId,
+      stepId: attempt.stepId,
+      correct: attempt.correct,
+      hintsUsed: attempt.hintsUsed,
+      timestamp: attempt.attemptedAt,
+    })),
+    skillStates: updatedStatesList.map((state) => ({
+      skillId: state.skillId,
+      masteredAt: state.masteredAt,
+      reviewStage: state.reviewStage,
+    })),
+  });
+
+  for (const achievementId of rewardEval.earnedAchievementIds) {
+    await store.awardAchievement(child.id, achievementId);
+  }
+  const persistedAchievements = await store.listAchievementsForChild(child.id);
+
+  const updatedStates = updatedStatesList.map((state) => ({
     skillId: state.skillId,
     independentSessions: state.independentSessions,
     masteredAt: state.masteredAt ? state.masteredAt.toISOString() : null,
@@ -116,5 +139,9 @@ export async function POST(request: Request) {
     acceptedCount: inserted.length,
     duplicateCount,
     skillStates: updatedStates,
+    achievements: persistedAchievements.map((award) => ({
+      achievementId: award.achievementId,
+      awardedAt: award.awardedAt.toISOString(),
+    })),
   });
 }

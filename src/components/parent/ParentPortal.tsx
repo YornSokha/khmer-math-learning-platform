@@ -7,6 +7,7 @@ import { FormattedNumber } from "@/components/khmer/FormattedNumber";
 import { t } from "@/lib/i18n/messages";
 import type { NumeralSystem } from "@/lib/khmer/numerals";
 import type { ParentProgressSummary } from "@/lib/mastery/scheduler";
+import { getAchievementDefinition } from "@/lib/rewards/engine";
 import type { PublicChildProfile, PublicParent } from "@/lib/server/store";
 import type { ChildAvatarId } from "@/lib/server/validation";
 import { getPendingAttempts } from "@/lib/storage/progress-db";
@@ -19,8 +20,19 @@ interface AuthMeResponse {
   children: PublicChildProfile[];
 }
 
+interface ChildAchievementItem {
+  achievementId: string;
+  awardedAt: string;
+}
+
 interface ChildProgressResponse {
   summary: ParentProgressSummary;
+  achievements?: ChildAchievementItem[];
+}
+
+interface ChildOverviewData {
+  summary: ParentProgressSummary;
+  achievements: ChildAchievementItem[];
 }
 
 export function ParentPortal() {
@@ -30,9 +42,7 @@ export function ParentPortal() {
   const [loading, setLoading] = useState(true);
   const [parent, setParent] = useState<PublicParent | null>(null);
   const [children, setChildren] = useState<PublicChildProfile[]>([]);
-  const [progressByChildId, setProgressByChildId] = useState<Record<string, ParentProgressSummary>>(
-    {},
-  );
+  const [progressByChildId, setProgressByChildId] = useState<Record<string, ChildOverviewData>>({});
   const [pendingLocalCount, setPendingLocalCount] = useState(0);
   const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
@@ -62,14 +72,17 @@ export function ParentPortal() {
           });
           if (!res.ok) return null;
           const data = (await res.json()) as ChildProgressResponse;
-          return [child.id, data.summary] as const;
+          return [
+            child.id,
+            { summary: data.summary, achievements: data.achievements ?? [] },
+          ] as const;
         } catch {
           return null;
         }
       }),
     );
 
-    const map: Record<string, ParentProgressSummary> = {};
+    const map: Record<string, ChildOverviewData> = {};
     for (const entry of entries) {
       if (entry) {
         map[entry[0]] = entry[1];
@@ -249,7 +262,10 @@ export function ParentPortal() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-6 px-4 py-6 sm:px-6">
+    <main
+      id="main-content"
+      className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-6 px-4 py-6 sm:px-6"
+    >
       <div className="flex items-center justify-between gap-2">
         <Link
           href="/"
@@ -444,7 +460,9 @@ export function ParentPortal() {
                 {children.map((child) => {
                   const isActive = activeChild?.id === child.id;
                   const confirmingDelete = confirmDeleteId === child.id;
-                  const summary = progressByChildId[child.id];
+                  const overview = progressByChildId[child.id];
+                  const summary = overview?.summary;
+                  const earnedAchievements = overview?.achievements ?? [];
 
                   return (
                     <li
@@ -530,7 +548,71 @@ export function ParentPortal() {
                               >
                                 {t("parentSyncedAttemptsLabel")}:{" "}
                                 <FormattedNumber value={summary.totalAttempts} />
+                                {summary.dueReviewCount > 0 && (
+                                  <>
+                                    {" "}
+                                    · {t("parentDueReviewsLabel")}:{" "}
+                                    <FormattedNumber value={summary.dueReviewCount} />
+                                  </>
+                                )}
                               </p>
+
+                              {summary.masteredSkills.length > 0 && (
+                                <div className="col-span-2 space-y-1 pt-1">
+                                  <p className="text-xs font-semibold text-emerald-800">
+                                    {t("parentMasteredSkillsLabel")}:
+                                  </p>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {summary.masteredSkills.map((item) => (
+                                      <span
+                                        key={item.skillId}
+                                        className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-900"
+                                      >
+                                        ✓ {item.lessonTitleKm}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {summary.practiceSkills.length > 0 && (
+                                <div className="col-span-2 space-y-1 pt-1">
+                                  <p className="text-xs font-semibold text-ink-muted">
+                                    {t("parentPracticeSkillsLabel")}:
+                                  </p>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {summary.practiceSkills.map((item) => (
+                                      <span
+                                        key={item.skillId}
+                                        className="rounded-full bg-surface px-2.5 py-0.5 text-xs font-medium text-ink"
+                                      >
+                                        {item.lessonTitleKm}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {earnedAchievements.length > 0 && (
+                                <div className="col-span-2 space-y-1 pt-1">
+                                  <p className="text-xs font-semibold text-accent">
+                                    {t("parentAchievementsLabel")}:
+                                  </p>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {earnedAchievements.map((award) => {
+                                      const def = getAchievementDefinition(award.achievementId);
+                                      return (
+                                        <span
+                                          key={award.achievementId}
+                                          className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent"
+                                        >
+                                          {def ? `${def.icon} ${def.titleKm}` : award.achievementId}
+                                        </span>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>

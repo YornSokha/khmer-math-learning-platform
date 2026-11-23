@@ -1,11 +1,17 @@
 import "fake-indexeddb/auto";
 import { render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NumeralPreferenceProvider } from "@/components/khmer/NumeralPreferenceProvider";
 import { getAllLessons } from "@/lib/content/loader";
 import { clearPlacementResult, savePlacementResult } from "@/lib/path/progression";
-import { clearProgressDb, recordLessonCompletion } from "@/lib/storage/progress-db";
+import { clearDailyChallengeStatus } from "@/lib/review/queue";
+import { clearProgressDb, recordAttempt, recordLessonCompletion } from "@/lib/storage/progress-db";
 import { LearningPathView } from "./LearningPathView";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 function getSummaries() {
   return getAllLessons().map((lesson, idx) => ({
@@ -15,6 +21,7 @@ function getSummaries() {
     moeysRef: lesson.moeysRef,
     estimatedMinutes: lesson.estimatedMinutes,
     skills: lesson.skills,
+    reviewItemIds: lesson.review.items,
   }));
 }
 
@@ -22,6 +29,7 @@ describe("LearningPathView", () => {
   beforeEach(async () => {
     window.localStorage.clear();
     clearPlacementResult();
+    clearDailyChallengeStatus();
     await clearProgressDb();
   });
 
@@ -93,6 +101,45 @@ describe("LearningPathView", () => {
     expect(screen.getByTestId("path-node-g1-07-subtraction-10")).toHaveAttribute(
       "data-lesson-state",
       "locked",
+    );
+  });
+
+  it("shows Today's Review card when a mastered skill is due and lets the child skip Daily Challenge without penalty", async () => {
+    const user = userEvent.setup();
+    await recordAttempt({
+      lessonId: "g1-make-ten",
+      lessonVersion: 1,
+      stepId: "mastery-check-bond-10",
+      correct: true,
+      hintsUsed: 0,
+      durationMs: 10_000,
+      timestamp: "2026-11-18T08:00:00.000Z",
+    });
+    await recordAttempt({
+      lessonId: "g1-make-ten",
+      lessonVersion: 1,
+      stepId: "mastery-check-bond-10",
+      correct: true,
+      hintsUsed: 0,
+      durationMs: 10_000,
+      timestamp: "2026-11-19T08:00:00.000Z",
+    });
+
+    render(
+      <NumeralPreferenceProvider>
+        <LearningPathView lessons={getSummaries()} />
+      </NumeralPreferenceProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("todays-review-card")).toHaveAttribute("data-due-count", "1");
+    });
+    expect(screen.getByTestId("todays-review-link")).toHaveAttribute("href", "/review");
+
+    await user.click(screen.getByTestId("daily-challenge-dashboard-skip"));
+    expect(screen.getByTestId("daily-challenge-dashboard-card")).toHaveAttribute(
+      "data-daily-status",
+      "skipped",
     );
   });
 });

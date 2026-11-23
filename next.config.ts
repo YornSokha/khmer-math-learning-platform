@@ -32,6 +32,8 @@ const withSerwist = withSerwistInit({
     { url: "/", revision },
     { url: "/learn", revision },
     { url: "/placement", revision },
+    { url: "/review", revision },
+    { url: "/daily-challenge", revision },
     { url: "/offline", revision },
     ...discoverLessonPrecacheEntries(),
   ],

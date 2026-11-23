@@ -34,3 +34,21 @@ The backend SHALL expose `GET /api/children/[childId]/progress` for the owning p
 #### Scenario: Parent views synced child mastery and learning time on /parent
 - **WHEN** a child's synced attempts include completed steps and duration milliseconds and the parent opens `/parent`
 - **THEN** the parent sees the child's mastered skills count, skills needing practice, and learning minutes for today and the past 7 days
+
+### Requirement: Child-facing Today's Review queue and interactive spaced-review runner
+The application SHALL build a due review queue from skills whose `nextReviewAt` has passed (computed locally from IndexedDB attempts or from synced `SkillState`s), surface a "Today's Review" card on `/learn` whenever due skills exist, and provide an interactive `/review` runner that plays review-eligible activity steps with instant feedback and hints and records attempts to advance the 1/3/7/21-day review schedule.
+
+#### Scenario: Mastered skill with elapsed nextReviewAt appears in Today's Review and advances when answered
+- **WHEN** a learner has a mastered skill whose `nextReviewAt` is in the past and opens `/learn`
+- **THEN** `/learn` displays the Today's Review card with a link to `/review`, `/review` presents an interactive review-eligible activity step from that skill's lesson, and submitting a correct independent answer records the attempt in IndexedDB and removes the completed item from today's due queue
+
+#### Scenario: Empty review queue shows calm encouragement without error
+- **WHEN** a learner opens `/review` with zero skills currently due for review
+- **THEN** `/review` shows a calm Khmer message explaining there are no due reviews right now and provides a link back to `/learn`
+
+### Requirement: Detailed calm Parent Overview with named skills, due reviews, and achievements
+The `/parent` overview card for each child SHALL display named mastered skills, named skills needing practice, due review count, earned achievement badges, and learning minutes (today and last 7 days) in a calm, non-comparative layout.
+
+#### Scenario: Parent views named practice/mastered skills and earned achievements for a child
+- **WHEN** a child has synced attempts producing mastered or practice skills and unlocked achievements and the parent opens `/parent`
+- **THEN** the child's overview card renders the skill/lesson names, due review count, earned achievement titles, and learning minutes

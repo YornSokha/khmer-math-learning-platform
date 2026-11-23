@@ -165,5 +165,88 @@ describe("Attempt sync API and parent progress summary", () => {
     expect(progressData.summary.minutesToday).toBeGreaterThanOrEqual(1);
     expect(progressData.summary.minutesLast7Days).toBeGreaterThanOrEqual(2);
     expect(progressData.summary.totalAttempts).toBe(2);
+
+    // Syncing 3 fixed mistakes unlocks mistake-fixer idempotently
+    const mistakeBatch = {
+      childProfileId: child.id,
+      attempts: [
+        {
+          clientEventId: "m1-w",
+          lessonId: "g1-01-subitize-1-5",
+          lessonVersion: 1,
+          stepId: "s1",
+          correct: false,
+          hintsUsed: 0,
+          durationMs: 5000,
+          timestamp: new Date(Date.now() - 60000).toISOString(),
+        },
+        {
+          clientEventId: "m1-c",
+          lessonId: "g1-01-subitize-1-5",
+          lessonVersion: 1,
+          stepId: "s1",
+          correct: true,
+          hintsUsed: 1,
+          durationMs: 5000,
+          timestamp: new Date(Date.now() - 50000).toISOString(),
+        },
+        {
+          clientEventId: "m2-w",
+          lessonId: "g1-01-subitize-1-5",
+          lessonVersion: 1,
+          stepId: "s2",
+          correct: false,
+          hintsUsed: 0,
+          durationMs: 5000,
+          timestamp: new Date(Date.now() - 40000).toISOString(),
+        },
+        {
+          clientEventId: "m2-c",
+          lessonId: "g1-01-subitize-1-5",
+          lessonVersion: 1,
+          stepId: "s2",
+          correct: true,
+          hintsUsed: 1,
+          durationMs: 5000,
+          timestamp: new Date(Date.now() - 30000).toISOString(),
+        },
+        {
+          clientEventId: "m3-w",
+          lessonId: "g1-01-subitize-1-5",
+          lessonVersion: 1,
+          stepId: "s3",
+          correct: false,
+          hintsUsed: 0,
+          durationMs: 5000,
+          timestamp: new Date(Date.now() - 20000).toISOString(),
+        },
+        {
+          clientEventId: "m3-c",
+          lessonId: "g1-01-subitize-1-5",
+          lessonVersion: 1,
+          stepId: "s3",
+          correct: true,
+          hintsUsed: 1,
+          durationMs: 5000,
+          timestamp: new Date(Date.now() - 10000).toISOString(),
+        },
+      ],
+    };
+
+    const mistakeSync = await syncPost(
+      new Request("http://localhost:3123/api/sync/attempts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", cookie: cookieA },
+        body: JSON.stringify(mistakeBatch),
+      }),
+    );
+    expect(mistakeSync.status).toBe(200);
+    const mistakeSyncData = (await mistakeSync.json()) as {
+      achievements: Array<{ achievementId: string }>;
+    };
+    const awardedIds = mistakeSyncData.achievements.map((a) => a.achievementId);
+    expect(awardedIds).toContain("mistake-fixer");
+    expect(awardedIds).toContain("master-bonds-10");
+    expect(new Set(awardedIds).size).toBe(awardedIds.length);
   });
 });

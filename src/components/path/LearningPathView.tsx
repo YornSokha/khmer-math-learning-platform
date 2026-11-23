@@ -2,40 +2,80 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
 import { NumeralToggle } from "@/components/khmer/NumeralToggle";
+import { ParentGateModal } from "@/components/parent/ParentGateModal";
+import { CalmRewardsSummary } from "@/components/rewards/CalmRewardsSummary";
 import { t } from "@/lib/i18n/messages";
+import { getDueReviewSkills, toUtcDateKey } from "@/lib/mastery/scheduler";
 import {
   computeLearningPath,
   loadPlacementResult,
   type PathLessonSummary,
 } from "@/lib/path/progression";
-import { getAllLessonCompletions } from "@/lib/storage/progress-db";
+import {
+  computeLocalSkillStates,
+  loadDailyChallengeHistory,
+  loadDailyChallengeStatus,
+  saveDailyChallengeStatus,
+  type DailyChallengeStatus,
+} from "@/lib/review/queue";
+import { evaluateRewards, type RewardSummary } from "@/lib/rewards/engine";
+import { getAllAttempts, getAllLessonCompletions } from "@/lib/storage/progress-db";
 
 export interface LearningPathViewProps {
   lessons: PathLessonSummary[];
 }
 
 export function LearningPathView({ lessons }: LearningPathViewProps) {
+  const router = useRouter();
   const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [placementStartOrder, setPlacementStartOrder] = useState(1);
+  const [dueReviewCount, setDueReviewCount] = useState(0);
+  const [dailyStatus, setDailyStatus] = useState<DailyChallengeStatus | null>(null);
+  const [rewards, setRewards] = useState<RewardSummary>(() => evaluateRewards({ attempts: [] }));
+  const [parentGateOpen, setParentGateOpen] = useState(false);
+  const todayKey = useMemo(() => toUtcDateKey(new Date()), []);
 
   useEffect(() => {
     let active = true;
     const savedPlacement = loadPlacementResult();
+    const savedDaily = loadDailyChallengeStatus(todayKey);
+    const dailyHistory = loadDailyChallengeHistory();
 
-    void getAllLessonCompletions().then((completions) => {
-      if (!active) return;
-      if (savedPlacement) {
-        setPlacementStartOrder(savedPlacement.recommendedStartOrder);
-      }
-      setCompletedIds(completions.map((item) => item.lessonId));
-    });
+    void Promise.all([getAllLessonCompletions(), getAllAttempts()]).then(
+      ([completions, attempts]) => {
+        if (!active) return;
+        if (savedPlacement) {
+          setPlacementStartOrder(savedPlacement.recommendedStartOrder);
+        }
+        setCompletedIds(completions.map((item) => item.lessonId));
+        setDailyStatus(savedDaily);
+
+        const localSkillStates = computeLocalSkillStates(attempts, lessons);
+        setDueReviewCount(getDueReviewSkills(localSkillStates, new Date()).length);
+        setRewards(
+          evaluateRewards({
+            attempts,
+            completions,
+            skillStates: localSkillStates,
+            dailyChallengeHistory: dailyHistory,
+            now: new Date(),
+          }),
+        );
+      },
+    );
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [lessons, todayKey]);
+
+  const handleSkipDailyChallenge = () => {
+    saveDailyChallengeStatus("skipped", todayKey);
+    setDailyStatus("skipped");
+  };
 
   const path = useMemo(
     () => computeLearningPath(lessons, new Set(completedIds), placementStartOrder),
@@ -43,7 +83,10 @@ export function LearningPathView({ lessons }: LearningPathViewProps) {
   );
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 px-4 py-6 sm:px-6">
+    <main
+      id="main-content"
+      className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 px-4 py-6 sm:px-6"
+    >
       <header className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Link
@@ -103,6 +146,88 @@ export function LearningPathView({ lessons }: LearningPathViewProps) {
           </div>
         </section>
       )}
+
+      <section
+        aria-label={t("dailyChallengeCardTitle")}
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+      >
+        {dueReviewCount > 0 && (
+          <article
+            data-testid="todays-review-card"
+            data-due-count={dueReviewCount}
+            className="flex flex-col justify-between gap-3 rounded-2xl border-2 border-emerald-400 bg-emerald-50/60 p-4 shadow-xs"
+          >
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-khmer-body font-bold text-emerald-950">
+                  {t("reviewCardTitle")}
+                </h2>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-sm font-bold text-emerald-900">
+                  <FormattedNumber value={dueReviewCount} />
+                </span>
+              </div>
+              <p className="text-sm text-emerald-900">{t("reviewCardSubtitle")}</p>
+            </div>
+
+            <Link
+              href="/review"
+              data-testid="todays-review-link"
+              className="inline-flex min-h-touch items-center justify-center rounded-xl bg-emerald-700 px-4 py-2 text-khmer-body font-semibold leading-[1.75] text-white overflow-visible transition-colors hover:bg-emerald-800"
+            >
+              {t("reviewStartButton")}
+            </Link>
+          </article>
+        )}
+
+        <article
+          data-testid="daily-challenge-dashboard-card"
+          data-daily-status={dailyStatus ?? "open"}
+          className={`flex flex-col justify-between gap-3 rounded-2xl border border-border bg-surface-card p-4 shadow-xs ${
+            dueReviewCount === 0 ? "sm:col-span-2" : ""
+          }`}
+        >
+          <div className="space-y-1">
+            <h2 className="text-khmer-body font-bold text-ink">{t("dailyChallengeCardTitle")}</h2>
+            <p className="text-sm text-ink-muted">{t("dailyChallengeCardSubtitle")}</p>
+          </div>
+
+          {dailyStatus === "completed" ? (
+            <p
+              data-testid="daily-challenge-status-badge"
+              className="rounded-xl bg-emerald-50 px-3.5 py-2 text-sm font-semibold text-emerald-900"
+            >
+              ✓ {t("dailyChallengeCompletedBadge")}
+            </p>
+          ) : dailyStatus === "skipped" ? (
+            <p
+              data-testid="daily-challenge-status-badge"
+              className="rounded-xl bg-surface px-3.5 py-2 text-sm font-medium text-ink-muted"
+            >
+              {t("dailyChallengeSkippedBadge")}
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/daily-challenge"
+                data-testid="daily-challenge-start-link"
+                className="inline-flex min-h-touch flex-1 items-center justify-center rounded-xl bg-accent px-4 py-2 text-khmer-body font-semibold leading-[1.75] text-white overflow-visible transition-colors hover:bg-accent-strong"
+              >
+                {t("dailyChallengeStartButton")}
+              </Link>
+              <button
+                type="button"
+                data-testid="daily-challenge-dashboard-skip"
+                onClick={handleSkipDailyChallenge}
+                className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface px-4 py-2 text-sm font-semibold leading-[1.75] text-ink-muted overflow-visible hover:bg-accent-soft hover:text-ink"
+              >
+                {t("dailyChallengeSkipButton")}
+              </button>
+            </div>
+          )}
+        </article>
+      </section>
+
+      <CalmRewardsSummary rewards={rewards} />
 
       <section aria-label={t("pathTitle")} className="space-y-3">
         {path.nodes.map((node) => {
@@ -179,6 +304,25 @@ export function LearningPathView({ lessons }: LearningPathViewProps) {
           );
         })}
       </section>
+      <footer className="flex justify-center pt-2 pb-4">
+        <button
+          type="button"
+          data-testid="learn-parent-gate-button"
+          onClick={() => setParentGateOpen(true)}
+          className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface-card px-4 py-2 text-sm font-semibold leading-[1.75] text-ink-muted overflow-visible hover:bg-accent-soft hover:text-ink"
+        >
+          🔒 {t("parentGateOpenButton")}
+        </button>
+      </footer>
+
+      <ParentGateModal
+        open={parentGateOpen}
+        onClose={() => setParentGateOpen(false)}
+        onUnlock={() => {
+          setParentGateOpen(false);
+          router.push("/parent");
+        }}
+      />
     </main>
   );
 }

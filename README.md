@@ -50,6 +50,29 @@ Install Chromium once before running `npm run test:e2e`:
 npx playwright install chromium
 ```
 
+## Deployment (Vercel + Managed PostgreSQL in Singapore)
+
+1. Provision a PostgreSQL database in the **Singapore (`sin1` / `ap-southeast-1`)** region (e.g., Neon, Supabase, or DigitalOcean Managed PostgreSQL).
+2. Configure environment variables in Vercel (or your Docker host):
+   - `DATABASE_URL` — PostgreSQL connection string (with SSL enabled in production).
+3. Run production database migrations before or during release:
+
+```bash
+npx prisma migrate deploy
+```
+
+4. Build and start with the webpack flag required by Serwist offline precaching:
+
+```bash
+npm run content:validate
+npm run build
+npm run start
+```
+
+5. Post-deploy verification checklist:
+   - Confirm `/sw.js` serves with `Cache-Control: no-cache, no-store, must-revalidate` and registers cleanly over HTTPS.
+   - Verify `<html lang="km">`, Khmer numerals (`១២៣` / `123` toggle), offline lesson playback, and parent signup + under-16 consent flow.
+
 ## Documentation
 
 - [docs/product.md](docs/product.md) — Core user journeys and UI/UX direction

@@ -505,7 +505,10 @@ export function LessonPlayer({
     : Math.round(((session.stepIndex + 1) / Math.max(1, totalSteps)) * 100);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-5 px-4 py-6 sm:px-6">
+    <main
+      id="main-content"
+      className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-5 px-4 py-6 sm:px-6"
+    >
       <header className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Link

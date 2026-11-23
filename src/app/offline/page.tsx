@@ -3,7 +3,10 @@ import { t } from "@/lib/i18n/messages";
 
 export default function OfflineFallbackPage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center gap-5 px-4 py-10 text-center sm:px-6">
+    <main
+      id="main-content"
+      className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center gap-5 px-4 py-10 text-center sm:px-6"
+    >
       <div
         data-testid="offline-fallback-card"
         className="w-full space-y-5 rounded-2xl border border-border bg-surface-card p-6 shadow-xs"
