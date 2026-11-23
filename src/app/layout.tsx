@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { NumeralPreferenceProvider } from "@/components/khmer/NumeralPreferenceProvider";
 import { OfflineStatusBanner } from "@/components/offline/OfflineStatusBanner";
+import { ActiveChildProvider } from "@/components/parent/ActiveChildProvider";
 import { kantumruyPro, notoSansKhmer } from "./fonts";
 import "./globals.css";
 
@@ -19,8 +20,10 @@ export default function RootLayout({
     <html lang="km" className={`${kantumruyPro.variable} ${notoSansKhmer.variable}`}>
       <body className="min-h-screen bg-surface font-sans text-khmer-body text-ink antialiased">
         <NumeralPreferenceProvider>
-          <OfflineStatusBanner />
-          {children}
+          <ActiveChildProvider>
+            <OfflineStatusBanner />
+            {children}
+          </ActiveChildProvider>
         </NumeralPreferenceProvider>
       </body>
     </html>

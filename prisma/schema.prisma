@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum NumeralPreference {
+  khmer
+  arabic
+}
+
+model Parent {
+  id                String          @id @default(cuid())
+  email             String          @unique
+  passwordHash      String
+  consentAcceptedAt DateTime
+  consentVersion    String          @default("v1-under-16-pdpl")
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  sessions ParentSession[]
+  children ChildProfile[]
+}
+
+model ParentSession {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  parentId  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  parent Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  @@index([parentId])
+}
+
+model ChildProfile {
+  id          String            @id @default(cuid())
+  parentId    String
+  nickname    String
+  avatarId    String
+  grade       Int               @default(1)
+  numeralPref NumeralPreference @default(khmer)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  parent       Parent             @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  attempts     Attempt[]
+  skillStates  SkillState[]
+  achievements AchievementAward[]
+
+  @@index([parentId])
+}
+
+model Attempt {
+  id              String   @id @default(cuid())
+  clientEventId   String   @unique
+  childProfileId  String
+  lessonId        String
+  lessonVersion   Int
+  stepId          String
+  correct         Boolean
+  hintsUsed       Int      @default(0)
+  misconceptionId String?
+  durationMs      Int      @default(0)
+  attemptedAt     DateTime
+  createdAt       DateTime @default(now())
+
+  childProfile ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+
+  @@index([childProfileId, attemptedAt])
+  @@index([childProfileId, lessonId])
+}
+
+model SkillState {
+  id                  String    @id @default(cuid())
+  childProfileId      String
+  skillId             String
+  independentSessions Int       @default(0)
+  lastMasteredDate    String?
+  masteredAt          DateTime?
+  reviewStage         Int       @default(0)
+  nextReviewAt        DateTime?
+  updatedAt           DateTime  @updatedAt
+
+  childProfile ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([childProfileId, skillId])
+  @@index([childProfileId, nextReviewAt])
+}
+
+model AchievementAward {
+  id             String   @id @default(cuid())
+  childProfileId String
+  achievementId  String
+  awardedAt      DateTime @default(now())
+
+  childProfile ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([childProfileId, achievementId])
+}

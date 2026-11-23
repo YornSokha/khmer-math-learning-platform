@@ -46,6 +46,13 @@ export default function HomePage() {
         >
           {t("navPreviewLesson")}
         </Link>
+        <Link
+          href="/parent"
+          data-testid="home-parent-portal-link"
+          className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface px-5 py-2.5 text-center text-khmer-body font-semibold leading-[1.75] text-ink overflow-visible transition-colors hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          {t("navParentPortal")}
+        </Link>
       </section>
 
       <section

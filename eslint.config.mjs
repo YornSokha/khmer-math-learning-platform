@@ -17,6 +17,7 @@ export default defineConfig([
     "public/sw.js",
     "public/sw.js.map",
     "public/swe-worker-*.js",
+    "src/generated/**",
     "next-env.d.ts",
   ]),
 ]);

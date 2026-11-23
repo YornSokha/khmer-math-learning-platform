@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: khmer-math-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: khmer_math
+      POSTGRES_PASSWORD: khmer_math
+      POSTGRES_DB: khmer_math
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
