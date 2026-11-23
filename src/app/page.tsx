@@ -14,6 +14,25 @@ export default function HomePage() {
       </header>
 
       <section
+        aria-label={t("navPlayLesson")}
+        className="flex flex-col gap-3 rounded-2xl border border-accent/30 bg-surface-card p-5 shadow-xs"
+      >
+        <Link
+          href="/lessons/g1-make-ten"
+          data-testid="home-start-lesson-link"
+          className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl bg-accent px-5 py-3 text-center text-khmer-body font-semibold leading-[1.75] text-white overflow-visible transition-colors hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          {t("navPlayLesson")}
+        </Link>
+        <Link
+          href="/preview/g1-make-ten"
+          className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface px-5 py-2.5 text-center text-khmer-body font-semibold leading-[1.75] text-ink overflow-visible transition-colors hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          {t("navPreviewLesson")}
+        </Link>
+      </section>
+
+      <section
         aria-label={t("numeralToggleGroupLabel")}
         className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface-card p-5 text-center shadow-xs"
       >
@@ -91,12 +110,6 @@ export default function HomePage() {
           >
             {t("actionCheckAnswer")}
           </button>
-          <Link
-            href="/preview/g1-make-ten"
-            className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-accent bg-accent-soft px-5 py-2.5 text-khmer-body font-semibold leading-[1.75] text-accent overflow-visible transition-colors hover:bg-accent hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
-            {t("navPreviewLesson")}
-          </Link>
         </div>
       </section>
     </main>

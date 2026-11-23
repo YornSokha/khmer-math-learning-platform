@@ -77,7 +77,7 @@ test("Khmer typography, self-hosted fonts, touch targets, and numeral toggle at 
 
   expect(metrics.hasHorizontalOverflow).toBe(false);
 
-  const buttons = page.locator("button");
+  const buttons = page.locator("main button");
   const buttonCount = await buttons.count();
   expect(buttonCount).toBeGreaterThanOrEqual(5);
 

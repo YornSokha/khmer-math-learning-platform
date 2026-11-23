@@ -9,7 +9,7 @@ describe("HomePage", () => {
     window.localStorage.clear();
   });
 
-  it("renders the Khmer heading, tagline, specimen text, and Grade 1 Khmer numbers by default", () => {
+  it("renders the Khmer heading, tagline, lesson link, specimen text, and Grade 1 Khmer numbers by default", () => {
     render(
       <NumeralPreferenceProvider>
         <HomePage />
@@ -18,6 +18,10 @@ describe("HomePage", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: "គណិតវិទ្យាខ្មែរ" })).toBeInTheDocument();
     expect(screen.getByText("រៀនគណិតវិទ្យាតាមការអនុវត្តផ្ទាល់។")).toBeInTheDocument();
+    expect(screen.getByTestId("home-start-lesson-link")).toHaveAttribute(
+      "href",
+      "/lessons/g1-make-ten",
+    );
 
     expect(screen.getByTestId("khmer-instruction")).toHaveTextContent("បង្កើតដប់");
     expect(screen.getByTestId("khmer-body")).toHaveTextContent("គ្រូបង្រៀន");
