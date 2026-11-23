@@ -24,29 +24,99 @@ export const paramsRecordSchema = z.record(
   paramSpecSchema,
 );
 
-export const activityTypeSchema = z.enum(["ten-frame", "number-line", "equation-fill"]);
+export const activityTypeSchema = z.enum([
+  "ten-frame",
+  "number-line",
+  "equation-fill",
+  "count-tap",
+  "choice-pictorial",
+  "compare-groups",
+  "drag-to-group",
+  "number-bond",
+  "place-value-blocks",
+  "pattern-sequence",
+  "partition",
+  "money-pay",
+]);
 export type ActivityType = z.infer<typeof activityTypeSchema>;
 
-export const activityModeSchema = z.enum(["fill", "read", "complete", "jump", "place", "solve"]);
+export const activityModeSchema = z.enum([
+  "fill",
+  "read",
+  "complete",
+  "jump",
+  "place",
+  "solve",
+  "count",
+  "subitize",
+  "select",
+  "compare",
+  "add",
+  "remove",
+  "build",
+  "extend",
+  "shade",
+  "pay",
+]);
 export type ActivityMode = z.infer<typeof activityModeSchema>;
 
 export const supportsLevelSchema = z.enum(["full", "partial", "none"]);
 export type SupportsLevel = z.infer<typeof supportsLevelSchema>;
 
-export const answerSpecSchema = z.object({
-  kind: z.literal("equals"),
-  expr: z.string().trim().min(1, "Answer expression is required"),
-  integerOnly: z.boolean().default(true),
+export const choiceOptionSchema = z.object({
+  id: z.string().trim().min(1, "Option id is required"),
+  label: localizedTextSchema,
+  count: z.number().int().min(0).max(100).optional(),
+  visual: z
+    .enum([
+      "mango",
+      "rambutan",
+      "banana",
+      "orange",
+      "longan",
+      "krama-red",
+      "krama-teal",
+      "krama-gold",
+      "lotus",
+      "jasmine",
+      "half-equal",
+      "half-unequal",
+      "quarter-equal",
+      "quarter-unequal",
+      "numeral",
+    ])
+    .optional(),
 });
+export type ChoiceOption = z.infer<typeof choiceOptionSchema>;
+
+export const answerSpecSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("equals"),
+    expr: z.string().trim().min(1, "Answer expression is required"),
+    integerOnly: z.boolean().default(true),
+  }),
+  z.object({
+    kind: z.literal("choice"),
+    value: z.string().trim().min(1, "Choice answer value is required"),
+  }),
+]);
+export type AnswerSpec = z.infer<typeof answerSpecSchema>;
+
+export const misconceptionConditionSchema = z.union([
+  z.object({
+    equals: z.string().trim().min(1, "Misconception expression is required"),
+  }),
+  z.object({
+    choice: z.string().trim().min(1, "Misconception choice value is required"),
+  }),
+]);
 
 export const misconceptionRuleSchema = z.object({
   id: z
     .string()
     .trim()
     .regex(/^[a-z0-9-]+$/, "Misconception id must be kebab-case"),
-  when: z.object({
-    equals: z.string().trim().min(1, "Misconception expression is required"),
-  }),
+  when: misconceptionConditionSchema,
   text: localizedTextSchema,
 });
 
@@ -56,6 +126,14 @@ export const hintVisualCueSchema = z.enum([
   "show-jump-arcs",
   "show-target-marker",
   "highlight-ten-frame-model",
+  "highlight-objects",
+  "highlight-compare-counts",
+  "highlight-basket-target",
+  "highlight-bond-parts",
+  "highlight-tens-ones",
+  "highlight-pattern-unit",
+  "highlight-equal-parts",
+  "highlight-riel-notes",
 ]);
 
 export const hintStepSchema = z.object({
@@ -91,6 +169,9 @@ export const exploreStepSchema = z.object({
   mode: activityModeSchema,
   prompt: localizedTextSchema,
   params: paramsRecordSchema.default({}),
+  options: z.array(choiceOptionSchema).optional(),
+  pattern: z.array(z.string().trim().min(1)).optional(),
+  visualKind: z.string().trim().min(1).optional(),
   audio: z.string().trim().min(1).optional(),
 });
 
@@ -106,6 +187,9 @@ export const activityStepSchema = z.object({
   prompt: localizedTextSchema,
   params: paramsRecordSchema.default({}),
   template: z.string().trim().min(1).optional(),
+  options: z.array(choiceOptionSchema).optional(),
+  pattern: z.array(z.string().trim().min(1)).optional(),
+  visualKind: z.string().trim().min(1).optional(),
   answer: answerSpecSchema,
   feedback: feedbackSchema,
   hints: z.array(hintStepSchema).min(1).max(3),
@@ -151,6 +235,7 @@ export const lessonSchema = z
       .string()
       .trim()
       .regex(/^[a-z0-9-]+$/, "Lesson id must be kebab-case"),
+    order: z.number().int().positive().optional(),
     version: z.number().int().positive(),
     title: localizedTextSchema,
     grade: z.number().int().min(1).max(6),
@@ -203,30 +288,44 @@ export const lessonSchema = z
       const params: ParamMap = step.params;
       const minValue = lesson.grade === 1 ? 0 : undefined;
 
-      const answerCheck = validateExpressionDomain(step.answer.expr, params, {
-        integerOnly: step.answer.integerOnly,
-        minValue,
-      });
-
-      if (!answerCheck.valid) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["steps", index, "answer", "expr"],
-          message: `Lesson "${lesson.id}" step "${step.id}": ${answerCheck.error}`,
+      if (step.answer.kind === "equals") {
+        const answerCheck = validateExpressionDomain(step.answer.expr, params, {
+          integerOnly: step.answer.integerOnly,
+          minValue,
         });
+
+        if (!answerCheck.valid) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["steps", index, "answer", "expr"],
+            message: `Lesson "${lesson.id}" step "${step.id}": ${answerCheck.error}`,
+          });
+        }
+      } else if (step.options && step.options.length > 0) {
+        const optionIds = new Set(step.options.map((option) => option.id));
+        if (!optionIds.has(step.answer.value)) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["steps", index, "answer", "value"],
+            message: `Lesson "${lesson.id}" step "${step.id}": choice answer "${step.answer.value}" is not listed in options`,
+          });
+        }
       }
 
       step.feedback.misconceptions.forEach((misconception, mIndex) => {
-        const misconceptionCheck = validateExpressionDomain(misconception.when.equals, params, {
-          integerOnly: step.answer.integerOnly,
-        });
-
-        if (!misconceptionCheck.valid) {
-          ctx.addIssue({
-            code: "custom",
-            path: ["steps", index, "feedback", "misconceptions", mIndex, "when", "equals"],
-            message: `Lesson "${lesson.id}" step "${step.id}" misconception "${misconception.id}": ${misconceptionCheck.error}`,
+        if ("equals" in misconception.when) {
+          const integerOnly = step.answer.kind === "equals" ? step.answer.integerOnly : true;
+          const misconceptionCheck = validateExpressionDomain(misconception.when.equals, params, {
+            integerOnly,
           });
+
+          if (!misconceptionCheck.valid) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["steps", index, "feedback", "misconceptions", mIndex, "when", "equals"],
+              message: `Lesson "${lesson.id}" step "${step.id}" misconception "${misconception.id}": ${misconceptionCheck.error}`,
+            });
+          }
         }
       });
 

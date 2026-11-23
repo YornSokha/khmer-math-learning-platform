@@ -79,4 +79,36 @@ describe("Pure activity engine evaluation", () => {
     expect(formatTemplateText("{a} + □ = 10", { a: 6 }, "khmer")).toBe("៦ + □ = 10");
     expect(formatTemplateText("{a} + □ = 10", { a: 6 }, "arabic")).toBe("6 + □ = 10");
   });
+
+  it("evaluates discrete choice answers and choice-based misconceptions", () => {
+    const compareStep: ActivityStep = {
+      id: "compare-1",
+      type: "activity",
+      activity: "compare-groups",
+      mode: "compare",
+      supports: "full",
+      prompt: { km: "ជ្រើសរើសសញ្ញាប្រៀបធៀប។" },
+      params: { left: 7, right: 4 },
+      answer: { kind: "choice", value: ">" },
+      feedback: {
+        correct: { km: "ត្រឹមត្រូវ! {left} {answer} {right}" },
+        misconceptions: [
+          {
+            id: "reversed-symbol",
+            when: { choice: "<" },
+            text: { km: "មាត់ធំបែរទៅរកចំនួនធំ។" },
+          },
+        ],
+      },
+      hints: [{ km: "រាប់ក្រុមទាំងពីរ។" }],
+    };
+
+    const right = evaluateActivityAnswer(compareStep, { left: 7, right: 4 }, ">", "khmer");
+    expect(right.correct).toBe(true);
+    expect(right.feedbackKm).toContain("៧ > ៤");
+
+    const reversed = evaluateActivityAnswer(compareStep, { left: 7, right: 4 }, "<");
+    expect(reversed.correct).toBe(false);
+    expect(reversed.misconceptionId).toBe("reversed-symbol");
+  });
 });

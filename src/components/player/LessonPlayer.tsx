@@ -158,17 +158,28 @@ function ActiveStepPanel({
 
   const handleSubmitActivity = (activityStep: ActivityStep) => {
     const trimmed = answerValue.trim();
-    const isInteractiveZero =
-      (activityStep.activity === "ten-frame" || activityStep.activity === "number-line") &&
-      trimmed === "";
+    const allowsImplicitDefault =
+      activityStep.answer.kind === "equals" &&
+      (activityStep.activity === "ten-frame" ||
+        activityStep.activity === "number-line" ||
+        activityStep.activity === "count-tap" ||
+        activityStep.activity === "drag-to-group" ||
+        activityStep.activity === "place-value-blocks" ||
+        activityStep.activity === "partition" ||
+        activityStep.activity === "money-pay");
 
-    if (trimmed === "" && !isInteractiveZero) {
+    if (trimmed === "" && !allowsImplicitDefault) {
       setValidationPrompt(t("playerEnterAnswerFirst"));
       return;
     }
 
     setValidationPrompt(null);
-    const submittedRaw = trimmed === "" ? 0 : trimmed;
+    const defaultNumeric =
+      activityStep.activity === "drag-to-group"
+        ? (resolvedParams.start ?? resolvedParams.given ?? 0)
+        : 0;
+    const submittedRaw =
+      trimmed === "" && activityStep.answer.kind === "equals" ? defaultNumeric : trimmed;
     const result = evaluateActivityAnswer(
       activityStep,
       resolvedParams,

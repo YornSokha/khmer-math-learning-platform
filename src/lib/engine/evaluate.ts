@@ -4,13 +4,14 @@ import {
   DEFAULT_NUMERAL_SYSTEM,
   formatNumber,
   parseNumericAnswer,
+  stripZeroWidthSpaces,
   type NumeralSystem,
 } from "@/lib/khmer/numerals";
 
 export interface EvaluationResult {
   correct: boolean;
-  expected: number;
-  submitted: number | null;
+  expected: number | string;
+  submitted: number | string | null;
   misconceptionId?: string;
   feedbackKm: string;
 }
@@ -44,7 +45,7 @@ export function formatTemplateText(
   template: string,
   resolvedParams: Record<string, number>,
   numeralSystem: NumeralSystem = DEFAULT_NUMERAL_SYSTEM,
-  extra?: Record<string, number>,
+  extra?: Record<string, number | string>,
 ): string {
   const formatted: Record<string, string> = {};
 
@@ -54,7 +55,10 @@ export function formatTemplateText(
 
   if (extra) {
     for (const [key, value] of Object.entries(extra)) {
-      formatted[key] = formatNumber(value, { numeralSystem, useGrouping: false });
+      formatted[key] =
+        typeof value === "number"
+          ? formatNumber(value, { numeralSystem, useGrouping: false })
+          : value;
     }
   }
 
@@ -67,6 +71,51 @@ export function evaluateActivityAnswer(
   rawAnswer: number | string | null | undefined,
   numeralSystem: NumeralSystem = DEFAULT_NUMERAL_SYSTEM,
 ): EvaluationResult {
+  if (step.answer.kind === "choice") {
+    const expected = step.answer.value;
+    const submitted =
+      rawAnswer === null || rawAnswer === undefined
+        ? null
+        : stripZeroWidthSpaces(String(rawAnswer)).trim();
+
+    if (submitted !== null && submitted === expected) {
+      return {
+        correct: true,
+        expected,
+        submitted,
+        feedbackKm: formatTemplateText(step.feedback.correct.km, resolvedParams, numeralSystem, {
+          answer: expected,
+        }),
+      };
+    }
+
+    if (submitted !== null) {
+      for (const misconception of step.feedback.misconceptions) {
+        if ("choice" in misconception.when && submitted === misconception.when.choice) {
+          return {
+            correct: false,
+            expected,
+            submitted,
+            misconceptionId: misconception.id,
+            feedbackKm: formatTemplateText(misconception.text.km, resolvedParams, numeralSystem, {
+              answer: expected,
+            }),
+          };
+        }
+      }
+    }
+
+    const fallbackKm = step.feedback.incorrect?.km ?? DEFAULT_INCORRECT_FEEDBACK_KM;
+    return {
+      correct: false,
+      expected,
+      submitted,
+      feedbackKm: formatTemplateText(fallbackKm, resolvedParams, numeralSystem, {
+        answer: expected,
+      }),
+    };
+  }
+
   const expected = evaluateExpression(step.answer.expr, resolvedParams);
 
   let submitted: number | null;
@@ -91,17 +140,19 @@ export function evaluateActivityAnswer(
 
   if (submitted !== null) {
     for (const misconception of step.feedback.misconceptions) {
-      const targetValue = evaluateExpression(misconception.when.equals, resolvedParams);
-      if (submitted === targetValue) {
-        return {
-          correct: false,
-          expected,
-          submitted,
-          misconceptionId: misconception.id,
-          feedbackKm: formatTemplateText(misconception.text.km, resolvedParams, numeralSystem, {
-            answer: expected,
-          }),
-        };
+      if ("equals" in misconception.when) {
+        const targetValue = evaluateExpression(misconception.when.equals, resolvedParams);
+        if (submitted === targetValue) {
+          return {
+            correct: false,
+            expected,
+            submitted,
+            misconceptionId: misconception.id,
+            feedbackKm: formatTemplateText(misconception.text.km, resolvedParams, numeralSystem, {
+              answer: expected,
+            }),
+          };
+        }
       }
     }
   }

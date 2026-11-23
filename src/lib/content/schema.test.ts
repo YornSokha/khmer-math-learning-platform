@@ -134,4 +134,58 @@ describe("Lesson YAML schema validation", () => {
       expect(result.errors[0]).toMatch(/YAML syntax error/);
     }
   });
+
+  it("validates choice-based activities and rejects unknown choice option references", () => {
+    const validChoiceYaml = `
+id: g1-compare-sample
+order: 4
+version: 1
+title: { km: "ប្រៀបធៀប" }
+grade: 1
+strand: number-sense
+moeysRef: ["G1-U6"]
+skills: [compare-10]
+estimatedMinutes: 5
+steps:
+  - id: compare-1
+    type: activity
+    activity: compare-groups
+    mode: compare
+    prompt: { km: "ជ្រើសរើសសញ្ញាប្រៀបធៀប។" }
+    params: { left: 7, right: 4 }
+    options:
+      - id: ">"
+        label: { km: ">" }
+      - id: "<"
+        label: { km: "<" }
+      - id: "="
+        label: { km: "=" }
+    answer:
+      kind: choice
+      value: ">"
+    feedback:
+      correct: { km: "ត្រឹមត្រូវ!" }
+      misconceptions:
+        - id: reversed-symbol
+          when: { choice: "<" }
+          text: { km: "មាត់ធំបែរទៅរកចំនួនធំ។" }
+    hints:
+      - km: "រាប់ក្រុមទាំងពីរ។"
+review:
+  items: [compare-1]
+reviewStatus:
+  math: approved
+  khmer: approved
+`;
+
+    expect(parseLessonYaml(validChoiceYaml).success).toBe(true);
+
+    const invalidChoice = parseLessonYaml(
+      validChoiceYaml.replace('value: ">"', 'value: "invalid"'),
+    );
+    expect(invalidChoice.success).toBe(false);
+    if (!invalidChoice.success) {
+      expect(invalidChoice.errors.join("\n")).toMatch(/not listed in options/);
+    }
+  });
 });

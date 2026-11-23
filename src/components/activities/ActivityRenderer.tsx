@@ -2,8 +2,17 @@
 
 import type { ActivityStep, ExploreStep } from "@/lib/content/schema";
 import { parseNumericAnswer } from "@/lib/khmer/numerals";
+import { ChoicePictorialActivity } from "./ChoicePictorialActivity";
+import { CompareGroupsActivity } from "./CompareGroupsActivity";
+import { CountTapActivity } from "./CountTapActivity";
+import { DragToGroupActivity } from "./DragToGroupActivity";
 import { EquationFillActivity } from "./EquationFillActivity";
+import { MoneyPayActivity } from "./MoneyPayActivity";
+import { NumberBondActivity } from "./NumberBondActivity";
 import { NumberLineActivity } from "./NumberLineActivity";
+import { PartitionActivity } from "./PartitionActivity";
+import { PatternSequenceActivity } from "./PatternSequenceActivity";
+import { PlaceValueBlocksActivity } from "./PlaceValueBlocksActivity";
 import { TenFrameActivity } from "./TenFrameActivity";
 
 export interface ActivityRendererProps {
@@ -60,6 +69,112 @@ export function ActivityRenderer({
           supports={step.type === "activity" ? step.supports : "full"}
           value={answerValue}
           onChange={onAnswerChange}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "count-tap":
+      return (
+        <CountTapActivity
+          mode={step.mode === "subitize" ? "subitize" : "count"}
+          count={resolvedParams.count ?? resolvedParams.given ?? 3}
+          visualKind={step.visualKind ?? "mango"}
+          flashMs={resolvedParams.flashMs ?? 2000}
+          value={answerValue}
+          onChange={onAnswerChange}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "choice-pictorial":
+      return (
+        <ChoicePictorialActivity
+          options={step.options ?? []}
+          value={answerValue}
+          onChange={onAnswerChange}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "compare-groups":
+      return (
+        <CompareGroupsActivity
+          leftCount={resolvedParams.left ?? 5}
+          rightCount={resolvedParams.right ?? 3}
+          visualKind={step.visualKind ?? "longan"}
+          value={answerValue}
+          onChange={onAnswerChange}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "drag-to-group":
+      return (
+        <DragToGroupActivity
+          mode={step.mode === "remove" ? "remove" : "add"}
+          initialCount={resolvedParams.start ?? resolvedParams.given ?? 0}
+          maxCount={resolvedParams.max ?? 12}
+          visualKind={step.visualKind ?? (step.mode === "remove" ? "orange" : "banana")}
+          value={numericValue}
+          onChange={(count) => onAnswerChange(String(count))}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "number-bond":
+      return (
+        <NumberBondActivity
+          whole={resolvedParams.whole ?? 10}
+          knownPart={resolvedParams.part ?? resolvedParams.given ?? 6}
+          value={answerValue}
+          onChange={onAnswerChange}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "place-value-blocks":
+      return (
+        <PlaceValueBlocksActivity
+          initialTens={resolvedParams.initialTens ?? 0}
+          initialOnes={resolvedParams.initialOnes ?? 0}
+          onChange={(total) => onAnswerChange(String(total))}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "pattern-sequence":
+      return (
+        <PatternSequenceActivity
+          pattern={step.pattern ?? ["krama-red", "krama-teal", "krama-red", "?"]}
+          options={step.options ?? []}
+          value={answerValue}
+          onChange={onAnswerChange}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "partition":
+      return (
+        <PartitionActivity
+          parts={resolvedParams.parts ?? 2}
+          onChange={(shaded) => onAnswerChange(String(shaded))}
+          activeHintCue={activeHintCue}
+          disabled={disabled}
+        />
+      );
+
+    case "money-pay":
+      return (
+        <MoneyPayActivity
+          onChange={(total) => onAnswerChange(String(total))}
           activeHintCue={activeHintCue}
           disabled={disabled}
         />
