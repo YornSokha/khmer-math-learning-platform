@@ -30,6 +30,8 @@ const withSerwist = withSerwistInit({
   disable: process.env.NODE_ENV === "development",
   additionalPrecacheEntries: [
     { url: "/", revision },
+    { url: "/learn", revision },
+    { url: "/placement", revision },
     { url: "/offline", revision },
     ...discoverLessonPrecacheEntries(),
   ],

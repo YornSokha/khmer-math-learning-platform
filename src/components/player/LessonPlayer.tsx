@@ -579,10 +579,10 @@ export function LessonPlayer({
 
           <div className="flex flex-wrap justify-center gap-3 pt-2">
             <Link
-              href="/"
+              href="/learn"
               className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl bg-accent px-5 py-3 text-khmer-body font-semibold leading-[1.75] text-white overflow-visible transition-colors hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              {t("navHome")}
+              {t("navLearningPath")}
             </Link>
             <button
               type="button"

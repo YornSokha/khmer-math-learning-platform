@@ -164,6 +164,24 @@ export async function getLessonCompletion(
   }
 }
 
+export async function getAllLessonCompletions(): Promise<StoredLessonCompletion[]> {
+  const db = await openProgressDb();
+  if (!db) {
+    return [];
+  }
+
+  try {
+    return await runTransaction<StoredLessonCompletion[]>(
+      db,
+      COMPLETIONS_STORE_NAME,
+      "readonly",
+      (store) => store.getAll(),
+    );
+  } finally {
+    db.close();
+  }
+}
+
 /**
  * Idempotently syncs pending attempts via the provided transport.
  * Pending records are only marked `"synced"` after the transport succeeds,
