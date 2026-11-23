@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { NumeralPreferenceProvider } from "@/components/khmer/NumeralPreferenceProvider";
+import { AppNavigationShell } from "@/components/navigation/AppNavigationShell";
 import { OfflineStatusBanner } from "@/components/offline/OfflineStatusBanner";
 import { ActiveChildProvider } from "@/components/parent/ActiveChildProvider";
+import { getAllLessons } from "@/lib/content/loader";
 import { t } from "@/lib/i18n/messages";
 import { kantumruyPro, notoSansKhmer } from "./fonts";
 import "./globals.css";
@@ -17,6 +19,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const reviewLessons = getAllLessons().map((lesson) => ({
+    id: lesson.id,
+    skills: lesson.skills,
+    reviewItemIds: lesson.review.items,
+  }));
+
   return (
     <html lang="km" className={`${kantumruyPro.variable} ${notoSansKhmer.variable}`}>
       <body className="min-h-screen bg-surface font-sans text-khmer-body text-ink antialiased">
@@ -30,7 +38,7 @@ export default function RootLayout({
         <NumeralPreferenceProvider>
           <ActiveChildProvider>
             <OfflineStatusBanner />
-            {children}
+            <AppNavigationShell reviewLessons={reviewLessons}>{children}</AppNavigationShell>
           </ActiveChildProvider>
         </NumeralPreferenceProvider>
       </body>

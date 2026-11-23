@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
-import { NumeralToggle } from "@/components/khmer/NumeralToggle";
 import { ParentGateModal } from "@/components/parent/ParentGateModal";
 import { CalmRewardsSummary } from "@/components/rewards/CalmRewardsSummary";
 import { t } from "@/lib/i18n/messages";
@@ -85,23 +84,11 @@ export function LearningPathView({ lessons }: LearningPathViewProps) {
   return (
     <main
       id="main-content"
-      className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 px-4 py-6 sm:px-6"
+      className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6 sm:px-6"
     >
-      <header className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <Link
-            href="/"
-            className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface-card px-4 py-2 text-khmer-body font-semibold leading-[1.75] text-ink overflow-visible hover:bg-accent-soft"
-          >
-            ← {t("navHome")}
-          </Link>
-          <NumeralToggle />
-        </div>
-
-        <div className="space-y-1">
-          <h1 className="text-khmer-heading font-bold text-ink">{t("pathTitle")}</h1>
-          <p className="text-khmer-body text-ink-muted">{t("pathSubtitle")}</p>
-        </div>
+      <header className="space-y-1">
+        <h1 className="text-khmer-heading font-bold text-ink">{t("pathTitle")}</h1>
+        <p className="text-khmer-body text-ink-muted">{t("pathSubtitle")}</p>
       </header>
 
       {path.nextLesson && (

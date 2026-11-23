@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
 import { useNumeralPreference } from "@/components/khmer/NumeralPreferenceProvider";
-import { NumeralToggle } from "@/components/khmer/NumeralToggle";
 import { useActiveChild } from "@/components/parent/ActiveChildProvider";
 import type { ActivityStep, Lesson } from "@/lib/content/schema";
 import {
@@ -153,24 +152,11 @@ export function DailyChallengePlayer({ lessons, dateKeyOverride }: DailyChalleng
   return (
     <main
       id="main-content"
-      className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-5 px-4 py-6 sm:px-6"
+      className="mx-auto flex w-full max-w-xl flex-col gap-5 px-4 py-6 sm:px-6"
     >
-      <header className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <Link
-            href="/learn"
-            data-testid="daily-back-link"
-            className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface-card px-4 py-2 text-khmer-body font-semibold leading-[1.75] text-ink overflow-visible hover:bg-accent-soft"
-          >
-            ← {t("backToLearningPath")}
-          </Link>
-          <NumeralToggle />
-        </div>
-
-        <div className="space-y-1">
-          <h1 className="text-khmer-heading font-bold text-ink">{t("dailyChallengeCardTitle")}</h1>
-          <p className="text-khmer-body text-ink-muted">{t("dailyChallengeCardSubtitle")}</p>
-        </div>
+      <header className="space-y-1">
+        <h1 className="text-khmer-heading font-bold text-ink">{t("dailyChallengeCardTitle")}</h1>
+        <p className="text-khmer-body text-ink-muted">{t("dailyChallengeCardSubtitle")}</p>
       </header>
 
       {loading ? (

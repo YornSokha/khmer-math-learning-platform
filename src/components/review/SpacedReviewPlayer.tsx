@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ActivityRenderer } from "@/components/activities/ActivityRenderer";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
 import { useNumeralPreference } from "@/components/khmer/NumeralPreferenceProvider";
-import { NumeralToggle } from "@/components/khmer/NumeralToggle";
 import { useActiveChild } from "@/components/parent/ActiveChildProvider";
 import type { ActivityStep, Lesson } from "@/lib/content/schema";
 import {
@@ -255,45 +254,32 @@ export function SpacedReviewPlayer({ lessons }: SpacedReviewPlayerProps) {
   return (
     <main
       id="main-content"
-      className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-5 px-4 py-6 sm:px-6"
+      className="mx-auto flex w-full max-w-xl flex-col gap-5 px-4 py-6 sm:px-6"
     >
-      <header className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <Link
-            href="/learn"
-            data-testid="review-back-link"
-            className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface-card px-4 py-2 text-khmer-body font-semibold leading-[1.75] text-ink overflow-visible hover:bg-accent-soft"
-          >
-            ← {t("backToLearningPath")}
-          </Link>
-          <NumeralToggle />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h1 className="text-khmer-heading font-bold text-ink">{t("reviewPageTitle")}</h1>
-            {!loading && !completed && queue.length > 0 && (
-              <p className="text-khmer-body font-semibold text-accent">
-                <FormattedNumber value={currentIndex + 1} /> /{" "}
-                <FormattedNumber value={queue.length} />
-              </p>
-            )}
-          </div>
-          {!loading && queue.length > 0 && (
-            <div
-              role="progressbar"
-              aria-valuenow={progressPercent}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              className="h-3 w-full rounded-full bg-border"
-            >
-              <div
-                className="h-3 rounded-full bg-accent transition-all duration-200"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
+      <header className="space-y-2">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h1 className="text-khmer-heading font-bold text-ink">{t("reviewPageTitle")}</h1>
+          {!loading && !completed && queue.length > 0 && (
+            <p className="text-khmer-body font-semibold text-accent">
+              <FormattedNumber value={currentIndex + 1} /> /{" "}
+              <FormattedNumber value={queue.length} />
+            </p>
           )}
         </div>
+        {!loading && queue.length > 0 && (
+          <div
+            role="progressbar"
+            aria-valuenow={progressPercent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            className="h-3 w-full rounded-full bg-border"
+          >
+            <div
+              className="h-3 rounded-full bg-accent transition-all duration-200"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        )}
       </header>
 
       {loading ? (

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useCallback, useEffect, useState } from "react";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
@@ -264,27 +263,8 @@ export function ParentPortal() {
   return (
     <main
       id="main-content"
-      className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-6 px-4 py-6 sm:px-6"
+      className="mx-auto flex w-full max-w-xl flex-col gap-6 px-4 py-6 sm:px-6"
     >
-      <div className="flex items-center justify-between gap-2">
-        <Link
-          href="/"
-          className="inline-flex min-h-touch min-w-touch items-center rounded-xl border border-border bg-surface-card px-4 py-2 text-khmer-body font-medium leading-[1.75] text-ink overflow-visible hover:bg-accent-soft"
-        >
-          {t("navHome")}
-        </Link>
-        {parent && (
-          <button
-            type="button"
-            data-testid="parent-logout-button"
-            onClick={handleLogout}
-            className="inline-flex min-h-touch min-w-touch items-center rounded-xl border border-border bg-surface-card px-4 py-2 text-khmer-body font-medium leading-[1.75] text-ink-muted overflow-visible hover:bg-accent-soft"
-          >
-            {t("parentLogoutButton")}
-          </button>
-        )}
-      </div>
-
       <header className="space-y-2 text-center">
         <h1 className="text-khmer-heading font-bold text-ink">{t("parentPortalTitle")}</h1>
         <p className="text-khmer-body text-ink-muted">{t("parentPortalSubtitle")}</p>
@@ -423,9 +403,19 @@ export function ParentPortal() {
             data-testid="parent-account-summary"
             className="space-y-3 rounded-2xl border border-border bg-surface-card p-5 shadow-xs"
           >
-            <p className="text-khmer-body text-ink-muted">
-              {t("parentSignedInAs")}: <strong className="text-ink">{parent.email}</strong>
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-khmer-body text-ink-muted">
+                {t("parentSignedInAs")}: <strong className="text-ink">{parent.email}</strong>
+              </p>
+              <button
+                type="button"
+                data-testid="parent-logout-button"
+                onClick={handleLogout}
+                className="inline-flex min-h-touch min-w-touch items-center rounded-xl border border-border bg-surface px-4 py-2 text-khmer-body font-medium leading-[1.75] text-ink-muted overflow-visible hover:bg-accent-soft"
+              >
+                {t("parentLogoutButton")}
+              </button>
+            </div>
             {pendingLocalCount > 0 && activeChild && (
               <button
                 type="button"

@@ -183,6 +183,12 @@ const kmMessages = {
   parentDueReviewsLabel: "ជំនាញដល់ពេលរំលឹក",
   parentAchievementsLabel: "ស្នាដៃដែលទទួលបាន",
   a11ySkipToContent: "រំលងទៅខ្លឹមសារសំខាន់",
+  navTabLearn: "រៀន",
+  navTabReview: "រំលឹក",
+  navTabDaily: "ប្រចាំថ្ងៃ",
+  navTabParents: "មាតាបិតា",
+  navPrimaryLabel: "ម៉ឺនុយចម្បង",
+  homeShowcaseHeading: "គំរូអក្សរ លេខ និងទំព័រគ្រូ",
 } as const;
 
 export type MessageKey = keyof typeof kmMessages;
@@ -371,6 +377,12 @@ const enMessages: Messages = {
   parentDueReviewsLabel: "Reviews due today",
   parentAchievementsLabel: "Achievements earned",
   a11ySkipToContent: "Skip to main content",
+  navTabLearn: "Learn",
+  navTabReview: "Review",
+  navTabDaily: "Daily",
+  navTabParents: "Parents",
+  navPrimaryLabel: "Main navigation",
+  homeShowcaseHeading: "Typography, Numerals & Teacher Preview",
 };
 
 const dictionaries: Record<Locale, Messages> = {
