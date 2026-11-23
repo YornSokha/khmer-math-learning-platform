@@ -60,6 +60,12 @@ const kmMessages = {
   playerSummaryFixedMistakes: "កំហុសដែលបានកែ",
   playerReplayLesson: "រៀនម្តងទៀត",
   playerDraftNotice: "មេរៀនសាកល្បង — កំពុងរង់ចាំគ្រូបឋមសិក្សាពិនិត្យភាសាខ្មែរ",
+  offlineBannerMessage: "កំពុងប្រើដោយគ្មានអ៊ីនធឺណិត — វឌ្ឍនភាពត្រូវបានរក្សាទុកក្នុងឧបករណ៍។",
+  offlinePageTitle: "មិនមានអ៊ីនធឺណិតទេ",
+  offlinePageBody:
+    "ទំព័រនេះមិនទាន់បានរក្សាទុកសម្រាប់ប្រើគ្មានអ៊ីនធឺណិតទេ។ អ្នកនៅតែអាចរៀនមេរៀនដែលបានទាញយករួចហើយបាន។",
+  progressSavedLocally: "វឌ្ឍនភាពត្រូវបានរក្សាទុកក្នុងឧបករណ៍",
+  lessonCompletedBadge: "បានបញ្ចប់មេរៀននេះរួចហើយ",
 } as const;
 
 export type MessageKey = keyof typeof kmMessages;
@@ -119,6 +125,12 @@ const enMessages: Messages = {
   playerSummaryFixedMistakes: "Mistakes fixed",
   playerReplayLesson: "Practice again",
   playerDraftNotice: "Preview lesson — awaiting primary teacher Khmer wording review",
+  offlineBannerMessage: "You are offline — learning progress is saved safely on this device.",
+  offlinePageTitle: "You are offline",
+  offlinePageBody:
+    "This page is not cached for offline use yet. You can still play your cached lessons below.",
+  progressSavedLocally: "Progress saved locally on this device",
+  lessonCompletedBadge: "Completed on this device",
 };
 
 const dictionaries: Record<Locale, Messages> = {

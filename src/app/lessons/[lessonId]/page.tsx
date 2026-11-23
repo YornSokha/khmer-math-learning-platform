@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { LessonPlayer } from "@/components/player/LessonPlayer";
+import { PersistentLessonPlayer } from "@/components/player/PersistentLessonPlayer";
 import { getAllLessons, getLessonById } from "@/lib/content/loader";
 
 export function generateStaticParams() {
@@ -14,5 +14,5 @@ export default async function LessonPage({ params }: { params: Promise<{ lessonI
     notFound();
   }
 
-  return <LessonPlayer lesson={lesson} />;
+  return <PersistentLessonPlayer lesson={lesson} />;
 }

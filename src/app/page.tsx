@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FormattedNumber } from "@/components/khmer/FormattedNumber";
 import { NumeralToggle } from "@/components/khmer/NumeralToggle";
+import { LessonCompletionBadge } from "@/components/offline/LessonCompletionBadge";
 import { t } from "@/lib/i18n/messages";
 
 const GRADE_1_SAMPLE_NUMBERS = [0, 5, 7, 10, 100] as const;
@@ -24,6 +25,7 @@ export default function HomePage() {
         >
           {t("navPlayLesson")}
         </Link>
+        <LessonCompletionBadge lessonId="g1-make-ten" />
         <Link
           href="/preview/g1-make-ten"
           className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-xl border border-border bg-surface px-5 py-2.5 text-center text-khmer-body font-semibold leading-[1.75] text-ink overflow-visible transition-colors hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"

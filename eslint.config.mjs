@@ -14,6 +14,9 @@ export default defineConfig([
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
+    "public/sw.js",
+    "public/sw.js.map",
+    "public/swe-worker-*.js",
     "next-env.d.ts",
   ]),
 ]);
