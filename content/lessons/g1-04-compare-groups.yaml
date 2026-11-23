@@ -1,0 +1,128 @@
+id: g1-04-compare-groups
+order: 4
+version: 1
+title:
+  km: "ច្រើនជាង តិចជាង ស្មើគ្នា"
+  en: "More, Less, Same"
+grade: 1
+strand: number-sense
+moeysRef:
+  - "G1-U6"
+  - "G1-U11"
+skills:
+  - compare-10
+prerequisites:
+  - five-benchmark
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-longan-bags
+    type: intro
+    text:
+      km: "នៅមុខសាលារៀន សុខា និង ដារ៉ា មានថង់ផ្លែមៀនម្នាក់មួយ។ តើថង់ណាមានផ្លែមៀនច្រើនជាង?"
+    image: longan-bags
+    audio: auto
+
+  - id: attempt-compare-greater
+    type: activity
+    activity: compare-groups
+    mode: compare
+    visualKind: longan
+    supports: full
+    prompt:
+      km: "ប្រៀបធៀបផ្លែមៀនទាំងពីរក្រុម រួចជ្រើសរើសសញ្ញា < = ឬ >។"
+    params:
+      left: 7
+      right: 4
+    answer:
+      kind: choice
+      value: ">"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! ៧ ធំជាង ៤ (៧ > ៤)។"
+      misconceptions:
+        - id: reversed-symbol
+          when:
+            choice: "<"
+          text:
+            km: "ចាំថា មាត់ធំនៃសញ្ញាបែរទៅរកចំនួនដែលច្រើនជាង!"
+    hints:
+      - km: "រាប់ផ្លែមៀននៅខាងឆ្វេង និងខាងស្តាំ។"
+      - km: "ខាងឆ្វេងមានច្រើនជាងខាងស្តាំ។"
+      - km: "មើលលេខបង្ហាញចំនួនក្រោមថង់ទាំងពីរ។"
+        show: highlight-compare-counts
+    audio: auto
+
+  - id: explain-compare-symbols
+    type: explain
+    text:
+      km: "សញ្ញា > មានន័យថាធំជាង, សញ្ញា < មានន័យថាតូចជាង និងសញ្ញា = មានន័យថាស្មើគ្នា។ មាត់ធំតែងបែរទៅរកចំនួនធំ។"
+    mathTerms:
+      - km: "ធំជាង (>)"
+        en: "Greater than (>)"
+      - km: "តូចជាង (<)"
+        en: "Less than (<)"
+    audio: auto
+
+  - id: practice-compare-less
+    type: activity
+    activity: compare-groups
+    mode: compare
+    visualKind: longan
+    supports: partial
+    prompt:
+      km: "ជ្រើសរើសសញ្ញាប្រៀបធៀបត្រឹមត្រូវសម្រាប់ផ្លែមៀនទាំងពីរក្រុម។"
+    params:
+      left: 3
+      right: 6
+    answer:
+      kind: choice
+      value: "<"
+    feedback:
+      correct:
+        km: "ល្អណាស់! ៣ តូចជាង ៦ (៣ < ៦)។"
+      misconceptions:
+        - id: reversed-symbol
+          when:
+            choice: ">"
+          text:
+            km: "៣ តិចជាង ៦ — មាត់ធំត្រូវបែរទៅរក ៦។"
+    hints:
+      - km: "តើខាងណាមានផ្លែមៀនច្រើនជាង?"
+      - km: "មើលចំនួនផ្លែមៀនទាំងពីរខាង។"
+        show: highlight-compare-counts
+    audio: auto
+
+  - id: mastery-compare-equal
+    type: activity
+    activity: compare-groups
+    mode: compare
+    visualKind: mango
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ ជ្រើសរើសសញ្ញាប្រៀបធៀបត្រឹមត្រូវ។"
+    params:
+      left: 5
+      right: 5
+    answer:
+      kind: choice
+      value: "="
+    feedback:
+      correct:
+        km: "អស្ចារ្យ! ៥ ស្មើ ៥ (៥ = ៥)។"
+    hints:
+      - km: "រាប់ផ្លែស្វាយខាងឆ្វេង និងខាងស្តាំ។"
+      - km: "មើលលេខប្រៀបធៀបទាំងពីរខាង។"
+        show: highlight-compare-counts
+    audio: auto
+
+review:
+  items:
+    - attempt-compare-greater
+    - practice-compare-less
+    - mastery-compare-equal
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

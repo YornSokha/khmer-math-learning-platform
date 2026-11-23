@@ -27,16 +27,20 @@ afterEach(() => {
 });
 
 describe("Lesson content loader", () => {
-  it("loads and segments the built-in g1-make-ten lesson with ZWSP", () => {
+  it("loads and segments all 12 ordered Grade 1 curriculum lessons with ZWSP", () => {
     const all = getAllLessons();
-    expect(all.length).toBeGreaterThanOrEqual(1);
+    expect(all).toHaveLength(12);
+    expect(all[0]?.id).toBe("g1-01-subitize-1-5");
+    expect(all[4]?.id).toBe("g1-make-ten");
+    expect(all[11]?.id).toBe("g1-12-riel-money");
+    expect(all.map((lesson) => lesson.order)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
     const makeTen = getLessonById("g1-make-ten");
     expect(makeTen).not.toBeNull();
     expect(makeTen?.steps).toHaveLength(8);
     expect(makeTen?.title.km).toContain("\u200B");
 
-    // g1-make-ten is draft in Khmer until teacher checkpoint, so excluded from published list
+    // Draft Khmer lessons remain excluded from published list until teacher checkpoint
     const published = getPublishedLessons();
     expect(published.some((l) => l.id === "g1-make-ten")).toBe(false);
   });

@@ -1,0 +1,128 @@
+id: g1-11-halves
+order: 11
+version: 1
+title:
+  km: "ពាក់កណ្តាលស្មើគ្នា (១/២)"
+  en: "Equal Halves"
+grade: 1
+strand: fractions
+moeysRef:
+  - "G1-U13"
+  - "G1-U24"
+skills:
+  - halves
+prerequisites:
+  - count-0-10
+estimatedMinutes: 5
+numerals: khmer
+steps:
+  - id: hook-share-num-pang
+    type: intro
+    text:
+      km: "បង និងប្អូនចែកនំប៉័ង ១ ដើមគ្នា។ ដើម្បីឱ្យយុត្តិធម៌ ត្រូវកាត់ជា ២ ចំណែកស្មើគ្នា — មួយចំណែកហៅថា ពាក់កណ្តាល!"
+    image: share-num-pang
+    audio: auto
+
+  - id: attempt-fair-half-choice
+    type: activity
+    activity: choice-pictorial
+    mode: select
+    supports: full
+    prompt:
+      km: "រូបមួយណាដែលកាត់ជាពាក់កណ្តាលស្មើគ្នា (យុត្តិធម៌)?"
+    options:
+      - id: equal
+        label: { km: "ស្មើគ្នា" }
+        visual: half-equal
+      - id: unequal
+        label: { km: "មិនស្មើគ្នា" }
+        visual: half-unequal
+    answer:
+      kind: choice
+      value: equal
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! ចំណែកទាំងពីរមានទំហំប៉ុនគ្នា គឺពាក់កណ្តាលស្មើគ្នា។"
+      misconceptions:
+        - id: picked-unequal
+          when:
+            choice: unequal
+          text:
+            km: "រូបនោះចំណែកមួយតូច មួយធំ — ពាក់កណ្តាលត្រូវតែស្មើគ្នា!"
+    hints:
+      - km: "ពិនិត្យមើលថាចំណែកឆ្វេង និងស្តាំមានទំហំប៉ុនគ្នាឬទេ។"
+      - km: "ពាក់កណ្តាលស្មើគ្នាមាន ២ ចំណែកប៉ុនគ្នា។"
+    audio: auto
+
+  - id: explain-halves-quarters
+    type: explain
+    text:
+      km: "ពេលចែកវត្ថុ ១ ជា ២ ចំណែកស្មើគ្នា មួយចំណែកគឺ ពាក់កណ្តាល (១/២)។ បើចែកជា ៤ ចំណែកស្មើគ្នា មួយចំណែកគឺ មួយភាគបួន (១/៤)។"
+    mathTerms:
+      - km: "ពាក់កណ្តាល (១/២)"
+        en: "One half (1/2)"
+      - km: "ចំណែកស្មើគ្នា"
+        en: "Equal parts"
+    audio: auto
+
+  - id: practice-shade-half
+    type: activity
+    activity: partition
+    mode: shade
+    supports: partial
+    prompt:
+      km: "ចុចលាបពណ៌ ១ ចំណែក ដើម្បីបង្ហាញពាក់កណ្តាលនៃនំ។"
+    params:
+      parts: 2
+    answer:
+      kind: equals
+      expr: "1"
+    feedback:
+      correct:
+        km: "ល្អណាស់! ១ ក្នុងចំណោម ២ ចំណែកស្មើគ្នា គឺពាក់កណ្តាល។"
+      misconceptions:
+        - id: shaded-whole
+          when:
+            equals: "2"
+          text:
+            km: "លាបទាំង ២ គឺនំទាំងមូល — ពាក់កណ្តាលត្រូវលាបតែ ១ ចំណែកប៉ុណ្ណោះ!"
+    hints:
+      - km: "នំចែកជា ២ ចំណែក — ពាក់កណ្តាលគឺ ១ ចំណែក។"
+      - km: "ចុចលាបតែ ១ ប្រអប់ប៉ុណ្ណោះ។"
+        show: highlight-equal-parts
+    audio: auto
+
+  - id: mastery-quarter-choice
+    type: activity
+    activity: choice-pictorial
+    mode: select
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ រូបមួយណាដែលចែកជា ៤ ចំណែកស្មើគ្នា?"
+    options:
+      - id: q-unequal
+        label: { km: "រូប ក" }
+        visual: quarter-unequal
+      - id: q-equal
+        label: { km: "រូប ខ" }
+        visual: quarter-equal
+    answer:
+      kind: choice
+      value: q-equal
+    feedback:
+      correct:
+        km: "ជោគជ័យ! រូប ខ មាន ៤ ចំណែកស្មើគ្នា (១/៤)។"
+    hints:
+      - km: "ពិនិត្យមើលថាប្រអប់ទាំង ៤ មានទំហំប៉ុនគ្នាទាំងអស់ឬទេ។"
+    audio: auto
+
+review:
+  items:
+    - attempt-fair-half-choice
+    - practice-shade-half
+    - mastery-quarter-choice
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

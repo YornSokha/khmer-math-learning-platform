@@ -1,0 +1,122 @@
+id: g1-12-riel-money
+order: 12
+version: 1
+title:
+  km: "បង់ប្រាក់ជាប្រាក់រៀល (៥០ និង ១០០ រៀល)"
+  en: "Paying with Riel"
+grade: 1
+strand: measurement
+moeysRef:
+  - "G1-U17"
+skills:
+  - riel-money
+prerequisites:
+  - place-value-99
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-market-snack
+    type: intro
+    text:
+      km: "ទៅផ្សារទិញនំជាមួយក្រដាសប្រាក់ ៥០ រៀល និង ១០០ រៀល។ តើយើងផ្គុំក្រដាសប្រាក់ប៉ុន្មានសន្លឹកដើម្បីបង់ប្រាក់ឱ្យគ្រប់?"
+    image: riel-market
+    audio: auto
+
+  - id: explore-riel-notes
+    type: explore
+    activity: money-pay
+    mode: pay
+    prompt:
+      km: "សាកចុចក្រដាសប្រាក់ ៥០ រៀល និង ១០០ រៀល ហើយសង្កេតប្រាក់សរុប។"
+    params:
+      target: 200
+    audio: auto
+
+  - id: attempt-pay-200-riel
+    type: activity
+    activity: money-pay
+    mode: pay
+    supports: full
+    prompt:
+      km: "នំមួយដុំថ្លៃ ២០០ រៀល។ ចុចដាក់ក្រដាសប្រាក់ឱ្យគ្រប់ ២០០ រៀល។"
+    params:
+      price: 200
+    answer:
+      kind: equals
+      expr: "price"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! អ្នកបានបង់គ្រប់ ២០០ រៀលហើយ។"
+      misconceptions:
+        - id: paid-one-hundred
+          when:
+            equals: "100"
+          text:
+            km: "ទើបបាន ១០០ រៀល — ត្រូវការថែម ១០០ រៀលទៀតដើម្បីគ្រប់ ២០០ រៀល។"
+    hints:
+      - km: "ក្រដាសប្រាក់ ១០០ រៀល ចំនួន ២ សន្លឹក ស្មើ ២០០ រៀល។"
+      - km: "ឬប្រើ ៥០ រៀល ២ សន្លឹក ស្មើ ១០០ រៀល។"
+        show: highlight-riel-notes
+    audio: auto
+
+  - id: explain-riel-notes
+    type: explain
+    text:
+      km: "៥០ រៀល + ៥០ រៀល = ១០០ រៀល។ យើងអាចផ្គុំក្រដាសប្រាក់ ១០០ រៀល និង ៥០ រៀល ដើម្បីបង់ថ្លៃទំនិញផ្សេងៗ។"
+    mathTerms:
+      - km: "ប្រាក់រៀល (៛)"
+        en: "Cambodian Riel (៛)"
+    audio: auto
+
+  - id: practice-pay-250-riel
+    type: activity
+    activity: money-pay
+    mode: pay
+    supports: partial
+    prompt:
+      km: "ផ្លែចេកថ្លៃ ២៥០ រៀល។ ដាក់ក្រដាសប្រាក់ឱ្យគ្រប់ ២៥០ រៀល។"
+    params:
+      price: 250
+    answer:
+      kind: equals
+      expr: "price"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! ១០០ + ១០០ + ៥០ = ២៥០ រៀល។"
+    hints:
+      - km: "ដាក់ ១០០ រៀល ចំនួន ២ សន្លឹក (បាន ២០០ រៀល)។"
+      - km: "បន្ថែម ៥០ រៀល ១ សន្លឹកទៀត!"
+        show: highlight-riel-notes
+    audio: auto
+
+  - id: mastery-pay-300-riel
+    type: activity
+    activity: money-pay
+    mode: pay
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ នំអន្សមតូចថ្លៃ ៣០០ រៀល។ បង់ប្រាក់ឱ្យគ្រប់ ៣០០ រៀល។"
+    params:
+      price: 300
+    answer:
+      kind: equals
+      expr: "price"
+    feedback:
+      correct:
+        km: "អស្ចារ្យ! អ្នកបង់គ្រប់ ៣០០ រៀលហើយ! អ្នកចេះប្រើប្រាក់រៀលហើយ!"
+    hints:
+      - km: "រាប់ម្តង ១០០៖ ១០០, ២០០, ៣០០។"
+      - km: "ប្រើក្រដាស ១០០ រៀល ៣ សន្លឹក ឬផ្គុំជាមួយ ៥០ រៀល។"
+        show: highlight-riel-notes
+    audio: auto
+
+review:
+  items:
+    - attempt-pay-200-riel
+    - practice-pay-250-riel
+    - mastery-pay-300-riel
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

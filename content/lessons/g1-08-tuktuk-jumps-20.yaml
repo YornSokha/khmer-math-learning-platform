@@ -1,0 +1,121 @@
+id: g1-08-tuktuk-jumps-20
+order: 8
+version: 1
+title:
+  km: "កង់បីលោតលើបន្ទាត់ចំនួនត្រឹម ២០"
+  en: "Tuk-Tuk Jumps Within 20"
+grade: 1
+strand: addition-subtraction
+moeysRef:
+  - "G1-U16"
+skills:
+  - add-sub-20
+prerequisites:
+  - sub-within-10
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-tuktuk-street
+    type: intro
+    text:
+      km: "កង់បីបើកតាមចំណតផ្លូវពីលេខ ០ ដល់ ២០។ តើយើងអាចប្រើបន្ទាត់ចំនួនដើម្បីបូក និងរាប់ជំហានបានយ៉ាងងាយ!"
+    image: tuktuk-road
+    audio: auto
+
+  - id: attempt-tuktuk-hop-15
+    type: activity
+    activity: number-line
+    mode: jump
+    supports: full
+    prompt:
+      km: "កង់បីនៅចំណតលេខ {start}។ តើត្រូវលោតទៅមុខប៉ុន្មានជំហានដើម្បីដល់ចំណតលេខ {target}?"
+    params:
+      start:
+        randInt: [8, 12]
+      target: 15
+      max: 16
+    answer:
+      kind: equals
+      expr: "target - start"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! ពី {start} លោត {answer} ជំហានដល់ {target}។"
+      misconceptions:
+        - id: counted-start-point
+          when:
+            equals: "target - start + 1"
+          text:
+            km: "កុំរាប់ចំណតចាប់ផ្តើម — រាប់តែជំហានដែលលោតទៅមុខ។"
+    hints:
+      - km: "ចុច លោតទៅមុខ +១ រហូតដល់ចំណតលេខ {target}។"
+      - km: "មើលខ្សែកោងជំហានលោតលើបន្ទាត់ចំនួន។"
+        show: show-jump-arcs
+    audio: auto
+
+  - id: explain-make-ten-bridge
+    type: explain
+    text:
+      km: "ពេលបូកលើស ១០ យើងអាចលោតដល់ ១០ សិន រួចលោតបន្តទៀត។ ឧទាហរណ៍ ៨ + ៤ = ៨ + ២ + ២ = ១២។"
+    mathTerms:
+      - km: "បន្ទាត់ចំនួន"
+        en: "Number line"
+    audio: auto
+
+  - id: practice-tuktuk-to-20
+    type: activity
+    activity: number-line
+    mode: jump
+    supports: partial
+    prompt:
+      km: "កង់បីនៅចំណតលេខ {start}។ លោតទៅមុខឱ្យដល់ចំណតលេខ ២០!"
+    params:
+      start:
+        randInt: [12, 17]
+      target: 20
+      max: 20
+    answer:
+      kind: equals
+      expr: "20 - start"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! {start} + {answer} = ២០។"
+    hints:
+      - km: "ចុចលោតទៅមុខពី {start} ដល់ ២០។"
+      - km: "តាមដានខ្សែកោងជំហានលោត។"
+        show: show-jump-arcs
+    audio: auto
+
+  - id: mastery-add-within-20
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ គណនាផលបូកត្រឹម ២០។"
+    params:
+      a:
+        randInt: [10, 14]
+      b:
+        randInt: [2, 5]
+    template: "{a} + {b} = □"
+    answer:
+      kind: equals
+      expr: "a + b"
+    feedback:
+      correct:
+        km: "អស្ចារ្យ! {a} + {b} = {answer}។"
+    hints:
+      - km: "ចាប់ផ្តើមពី {a} រាប់បន្តថែម {b}។"
+      - km: "រាប់ម្តងមួយៗរហូតគ្រប់ {b} ជំហាន។"
+    audio: auto
+
+review:
+  items:
+    - attempt-tuktuk-hop-15
+    - practice-tuktuk-to-20
+    - mastery-add-within-20
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

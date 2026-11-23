@@ -1,0 +1,140 @@
+id: g1-06-addition-10
+order: 6
+version: 1
+title:
+  km: "វិធីបូកត្រឹម ១០ (ផ្គុំចូលគ្នា)"
+  en: "Putting Together (Addition to 10)"
+grade: 1
+strand: addition-subtraction
+moeysRef:
+  - "G1-U14"
+skills:
+  - add-within-10
+prerequisites:
+  - bond-10
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-mom-bananas
+    type: intro
+    text:
+      km: "ម៉ាក់មានចេកខ្លះក្នុងកន្ត្រក ហើយដាក់ថែមទៀត។ ការផ្គុំក្រុមពីរចូលគ្នាគឺជាវិធីបូក (+)។"
+    image: banana-basket
+    audio: auto
+
+  - id: explore-basket-join
+    type: explore
+    activity: drag-to-group
+    mode: add
+    visualKind: banana
+    prompt:
+      km: "សាកចុចដាក់ចេកចូលក្នុងកន្ត្រករបស់ម៉ាក់ ដើម្បីមើលចំនួនកើនឡើង។"
+    params:
+      start: 3
+      max: 10
+    audio: auto
+
+  - id: attempt-join-bananas
+    type: activity
+    activity: drag-to-group
+    mode: add
+    visualKind: banana
+    supports: full
+    prompt:
+      km: "ក្នុងកន្ត្រកមានចេក {start} ផ្លែ។ ដាក់ថែម {add} ផ្លែទៀត។ តើមានចេកសរុបប៉ុន្មាន?"
+    params:
+      start:
+        randInt: [2, 5]
+      add:
+        randInt: [2, 4]
+      max: 10
+    answer:
+      kind: equals
+      expr: "start + add"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! {start} + {add} = {answer}។"
+      misconceptions:
+        - id: forgot-to-add
+          when:
+            equals: "start"
+          text:
+            km: "ចុចប៊ូតុង ដាក់ចូលកន្ត្រក +១ ចំនួន {add} ដងទៀត!"
+    hints:
+      - km: "ចុចប៊ូតុង ដាក់ចូលកន្ត្រក +១ ចំនួន {add} ដង។"
+      - km: "ចាប់ផ្តើមពី {start} រាប់បន្តថែម {add}។"
+      - km: "មើលចំនួនចេកក្នុងកន្ត្រកពណ៌ភ្លឺ។"
+        show: highlight-basket-target
+    audio: auto
+
+  - id: explain-addition-commutativity
+    type: explain
+    text:
+      km: "វិធីបូកគឺការផ្គុំចូលគ្នា។ ទោះដូរលំដាប់ក៏ផលបូកនៅដដែល៖ ៣ + ២ = ៥ និង ២ + ៣ = ៥។"
+    mathTerms:
+      - km: "វិធីបូក (+)"
+        en: "Addition (+)"
+      - km: "ផលបូក"
+        en: "Sum"
+    audio: auto
+
+  - id: practice-add-equation
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: partial
+    prompt:
+      km: "គណនាផលបូកខាងក្រោម។"
+    params:
+      a:
+        randInt: [2, 5]
+      b:
+        randInt: [2, 4]
+    template: "{a} + {b} = □"
+    answer:
+      kind: equals
+      expr: "a + b"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! {a} + {b} = {answer}។"
+    hints:
+      - km: "ចាប់ផ្តើមពី {a} ហើយរាប់បន្តថែម {b}។"
+      - km: "ប្រើតារាងដប់ដើម្បីរាប់សរុប។"
+        show: highlight-ten-frame-model
+    audio: auto
+
+  - id: mastery-commutativity
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ បំពេញផលបូកឱ្យបានត្រឹមត្រូវ។"
+    params:
+      a:
+        randInt: [3, 6]
+      b:
+        randInt: [1, 4]
+    template: "{b} + {a} = □"
+    answer:
+      kind: equals
+      expr: "a + b"
+    feedback:
+      correct:
+        km: "អស្ចារ្យ! {b} + {a} = {answer}។"
+    hints:
+      - km: "ចាប់ផ្តើមពីលេខធំ ({a}) រាប់បន្តថែម {b} លឿនជាង!"
+      - km: "បើករូបតារាងដប់ដើម្បីផ្ទៀងផ្ទាត់។"
+        show: highlight-ten-frame-model
+    audio: auto
+
+review:
+  items:
+    - attempt-join-bananas
+    - practice-add-equation
+    - mastery-commutativity
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

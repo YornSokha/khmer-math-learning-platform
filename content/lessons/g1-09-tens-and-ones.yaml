@@ -1,0 +1,139 @@
+id: g1-09-tens-and-ones
+order: 9
+version: 1
+title:
+  km: "ខ្ទង់ដប់ និងខ្ទង់រាយ (ដល់ ៩៩)"
+  en: "Tens and Ones"
+grade: 1
+strand: number-sense
+moeysRef:
+  - "G1-U8"
+skills:
+  - place-value-99
+prerequisites:
+  - add-sub-20
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-stick-bundles
+    type: intro
+    text:
+      km: "យើងចងចង្កឹះ ១០ ដើមជាមួយដុំ (១ ដប់) ដើម្បីរាប់ចំនួនធំដូចជាអាយុរបស់ប៉ាម៉ាក់ ឬចំនួនសិស្សក្នុងថ្នាក់បានយ៉ាងលឿន!"
+    image: stick-bundles
+    audio: auto
+
+  - id: explore-place-value
+    type: explore
+    activity: place-value-blocks
+    mode: build
+    prompt:
+      km: "សាកចុចបន្ថែម ដុំដប់ (+១០) និង ដើមរាយ (+១) ហើយមើលលេខសរុបផ្លាស់ប្តូរ។"
+    params:
+      initialTens: 1
+      initialOnes: 2
+    audio: auto
+
+  - id: attempt-build-two-digit
+    type: activity
+    activity: place-value-blocks
+    mode: build
+    supports: full
+    prompt:
+      km: "បង្កើតចំនួន {target} ដោយប្រើដុំដប់ និងដើមរាយ។"
+    params:
+      tens:
+        randInt: [1, 4]
+      ones:
+        randInt: [2, 8]
+      target: 24
+    answer:
+      kind: equals
+      expr: "target"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! ២ ដប់ និង ៤ រាយ ស្មើ ២៤។"
+      misconceptions:
+        - id: swapped-tens-ones
+          when:
+            equals: "42"
+          text:
+            km: "ពិនិត្យខ្ទង់ដប់ និងខ្ទង់រាយម្តងទៀត — ២៤ មាន ២ ដប់ និង ៤ រាយ!"
+    hints:
+      - km: "លេខខាងឆ្វេងគឺចំនួនដុំដប់ (២ ដុំ)។"
+      - km: "លេខខាងស្តាំគឺចំនួនដើមរាយ (៤ ដើម)។"
+      - km: "មើលជួរខ្ទង់ដប់ និងខ្ទង់រាយដែលភ្លឺ។"
+        show: highlight-tens-ones
+    audio: auto
+
+  - id: explain-tens-ones
+    type: explain
+    text:
+      km: "ចំនួនពីរខ្ទង់ផ្សំឡើងពីខ្ទង់ដប់ និងខ្ទង់រាយ។ ឧទាហរណ៍ ៣៥ = ៣ ដប់ (៣០) + ៥ រាយ (៥)។"
+    mathTerms:
+      - km: "ខ្ទង់ដប់"
+        en: "Tens place"
+      - km: "ខ្ទង់រាយ"
+        en: "Ones place"
+    audio: auto
+
+  - id: practice-build-35
+    type: activity
+    activity: place-value-blocks
+    mode: build
+    supports: partial
+    prompt:
+      km: "បង្កើតចំនួន ៣៥ (៣ ដប់ និង ៥ រាយ)។"
+    params:
+      target: 35
+    answer:
+      kind: equals
+      expr: "target"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! ៣ ដប់ និង ៥ រាយ ស្មើ ៣៥។"
+      misconceptions:
+        - id: swapped-tens-ones
+          when:
+            equals: "53"
+          text:
+            km: "៥៣ គឺ ៥ ដប់ ៣ រាយ — យើងត្រូវការ ៣ ដប់ ៥ រាយ (៣៥)។"
+    hints:
+      - km: "បន្ថែម ៣ ដុំដប់។"
+      - km: "បន្ថែម ៥ ដើមរាយ។"
+        show: highlight-tens-ones
+    audio: auto
+
+  - id: mastery-compose-tens-ones
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ បូកខ្ទង់ដប់ និងខ្ទង់រាយចូលគ្នា។"
+    params:
+      tensVal:
+        randInt: [2, 6]
+      onesVal:
+        randInt: [1, 8]
+    template: "{tensVal}0 + {onesVal} = □"
+    answer:
+      kind: equals
+      expr: "tensVal * 10 + onesVal"
+    feedback:
+      correct:
+        km: "ជោគជ័យ! ចំនួនសរុបគឺ {answer}។"
+    hints:
+      - km: "ដាក់ខ្ទង់ដប់នៅខាងឆ្វេង និងខ្ទង់រាយនៅខាងស្តាំ។"
+      - km: "{tensVal} ដប់ និង {onesVal} រាយ។"
+    audio: auto
+
+review:
+  items:
+    - attempt-build-two-digit
+    - practice-build-35
+    - mastery-compose-tens-ones
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

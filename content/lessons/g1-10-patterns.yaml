@@ -1,0 +1,151 @@
+id: g1-10-patterns
+order: 10
+version: 1
+title:
+  km: "លំនាំក្រមា និងកម្រងផ្កា"
+  en: "Repeating Patterns"
+grade: 1
+strand: patterns-algebra
+moeysRef:
+  - "G1-U4"
+skills:
+  - patterns-ab-aab
+prerequisites:
+  - subitize-1-5
+estimatedMinutes: 5
+numerals: khmer
+steps:
+  - id: hook-krama-pattern
+    type: intro
+    text:
+      km: "ក្រមាខ្មែរ និងកម្រងផ្កាមានលំនាំពណ៌ដដែលៗ។ តើអ្នកអាចទាយបានទេថារូបបន្ទាប់គឺអ្វី?"
+    image: krama-pattern
+    audio: auto
+
+  - id: attempt-krama-ab
+    type: activity
+    activity: pattern-sequence
+    mode: extend
+    supports: full
+    prompt:
+      km: "មើលលំនាំក្រមាខាងក្រោម ហើយជ្រើសរើសរូបដែលត្រូវដាក់បន្ទាប់។"
+    pattern:
+      - krama-red
+      - krama-teal
+      - krama-red
+      - krama-teal
+      - krama-red
+      - "?"
+    options:
+      - id: krama-red
+        label: { km: "ក្រមាក្រហម" }
+        visual: krama-red
+      - id: krama-teal
+        label: { km: "ក្រមាបៃតង" }
+        visual: krama-teal
+    answer:
+      kind: choice
+      value: krama-teal
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! លំនាំឆ្លាស់គ្នា ក្រហម → បៃតង → ក្រហម → បៃតង!"
+      misconceptions:
+        - id: repeated-last
+          when:
+            choice: krama-red
+          text:
+            km: "មើលពណ៌មុននេះជាក្រហម — បន្ទាប់ពីក្រហមគឺបៃតង។"
+    hints:
+      - km: "អានពណ៌ឮៗតាមលំដាប់៖ ក្រហម បៃតង ក្រហម បៃតង..."
+      - km: "មើលគូលំនាំដំបូងដែលមានស៊ុមពណ៌ភ្លឺ។"
+        show: highlight-pattern-unit
+    audio: auto
+
+  - id: explain-repeating-unit
+    type: explain
+    text:
+      km: "លំនាំដដែលៗមានក្រុមរូបដែលកើតឡើងម្តងហើយម្តងទៀត ដូចជា AB (ក្រហម-បៃតង) ឬ AAB (ឈូក-ឈូក-ម្លិះ)។"
+    mathTerms:
+      - km: "លំនាំដដែលៗ"
+        en: "Repeating pattern"
+    audio: auto
+
+  - id: practice-flower-garland-aab
+    type: activity
+    activity: pattern-sequence
+    mode: extend
+    supports: partial
+    prompt:
+      km: "បន្តកម្រងផ្កាឈូក និងផ្កាម្លិះ៖ តើផ្កាណាត្រូវដាក់បន្ទាប់?"
+    pattern:
+      - lotus
+      - lotus
+      - jasmine
+      - lotus
+      - lotus
+      - "?"
+    options:
+      - id: lotus
+        label: { km: "ផ្កាឈូក" }
+        visual: lotus
+      - id: jasmine
+        label: { km: "ផ្កាម្លិះ" }
+        visual: jasmine
+    answer:
+      kind: choice
+      value: jasmine
+    feedback:
+      correct:
+        km: "ពូកែណាស់! ឈូក ឈូក ម្លិះ → ឈូក ឈូក ម្លិះ!"
+    hints:
+      - km: "រាប់ផ្កាឈូកជាប់គ្នា៖ មាន ២ ទង រួចដល់ផ្កាម្លិះ ១ ទង។"
+      - km: "មើលក្រុមលំនាំដំបូង។"
+        show: highlight-pattern-unit
+    audio: auto
+
+  - id: mastery-krama-three-color
+    type: activity
+    activity: pattern-sequence
+    mode: extend
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ បំពេញលំនាំក្រមា ៣ ពណ៌ឱ្យត្រឹមត្រូវ។"
+    pattern:
+      - krama-red
+      - krama-gold
+      - krama-teal
+      - krama-red
+      - krama-gold
+      - "?"
+    options:
+      - id: krama-red
+        label: { km: "ក្រហម" }
+        visual: krama-red
+      - id: krama-gold
+        label: { km: "មាស" }
+        visual: krama-gold
+      - id: krama-teal
+        label: { km: "បៃតង" }
+        visual: krama-teal
+    answer:
+      kind: choice
+      value: krama-teal
+    feedback:
+      correct:
+        km: "អស្ចារ្យ! ក្រហម → មាស → បៃតង!"
+    hints:
+      - km: "អានតាមលំដាប់៖ ក្រហម មាស បៃតង ក្រហម មាស..."
+      - km: "ពណ៌បន្ទាប់ពីពណ៌មាសគឺពណ៌អ្វី?"
+        show: highlight-pattern-unit
+    audio: auto
+
+review:
+  items:
+    - attempt-krama-ab
+    - practice-flower-garland-aab
+    - mastery-krama-three-color
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

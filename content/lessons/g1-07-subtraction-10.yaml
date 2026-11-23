@@ -1,0 +1,126 @@
+id: g1-07-subtraction-10
+order: 7
+version: 1
+title:
+  km: "វិធីដកត្រឹម ១០ (ដកចេញ)"
+  en: "Taking Away (Subtraction to 10)"
+grade: 1
+strand: addition-subtraction
+moeysRef:
+  - "G1-U15"
+skills:
+  - sub-within-10
+prerequisites:
+  - add-within-10
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-oranges-away
+    type: intro
+    text:
+      km: "មានក្រូចនៅក្នុងកន្ត្រក បើហូប ឬយកចេញខ្លះ តើនៅសល់ក្រូចប៉ុន្មានផ្លែ? ការដកចេញគឺជាវិធីដក (-)។"
+    image: orange-basket
+    audio: auto
+
+  - id: attempt-take-away-oranges
+    type: activity
+    activity: drag-to-group
+    mode: remove
+    visualKind: orange
+    supports: full
+    prompt:
+      km: "មានក្រូច {start} ផ្លែ។ ដកចេញ {take} ផ្លែ។ តើនៅសល់ក្រូចប៉ុន្មានផ្លែ?"
+    params:
+      start:
+        randInt: [6, 9]
+      take:
+        randInt: [2, 4]
+      max: 10
+    answer:
+      kind: equals
+      expr: "start - take"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! {start} - {take} = {answer}។"
+      misconceptions:
+        - id: forgot-to-remove
+          when:
+            equals: "start"
+          text:
+            km: "ចុចលើក្រូច ឬប៊ូតុង ដកចេញ -១ ចំនួន {take} ដង!"
+    hints:
+      - km: "ចុចដកក្រូចចេញ {take} ផ្លែ រួចរាប់ចំនួនដែលនៅសល់។"
+      - km: "មើលចំនួនក្រូចដែលនៅសល់ក្នុងកន្ត្រក។"
+        show: highlight-basket-target
+    audio: auto
+
+  - id: explain-subtraction
+    type: explain
+    text:
+      km: "វិធីដក (-) មានន័យថាដកចេញពីចំនួនដើម។ ឧទាហរណ៍ មានក្រូច ៧ ផ្លែ ដកចេញ ២ ផ្លែ នៅសល់ ៥ ផ្លែ (៧ - ២ = ៥)។"
+    mathTerms:
+      - km: "វិធីដក (-)"
+        en: "Subtraction (-)"
+      - km: "ផលដក"
+        en: "Difference"
+    audio: auto
+
+  - id: practice-sub-bond
+    type: activity
+    activity: number-bond
+    mode: solve
+    supports: partial
+    prompt:
+      km: "មាន {whole} ហើយដកចេញ {part}។ តើផ្នែកដែលនៅសល់ស្មើប៉ុន្មាន?"
+    params:
+      whole:
+        randInt: [7, 10]
+      part:
+        randInt: [2, 5]
+    answer:
+      kind: equals
+      expr: "whole - part"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! {whole} - {part} = {answer}។"
+    hints:
+      - km: "គិតថា {part} បូកប៉ុន្មានទើបស្មើ {whole}?"
+      - km: "មើលផ្នែកទាំងពីរក្នុងរូបគូបង្កើត។"
+        show: highlight-bond-parts
+    audio: auto
+
+  - id: mastery-sub-equation
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: none
+    prompt:
+      km: "លំហាត់បញ្ចប់៖ គណនាផលដកខាងក្រោម។"
+    params:
+      a:
+        randInt: [6, 10]
+      b:
+        randInt: [1, 5]
+    template: "{a} - {b} = □"
+    answer:
+      kind: equals
+      expr: "a - b"
+    feedback:
+      correct:
+        km: "ជោគជ័យ! {a} - {b} = {answer}។"
+    hints:
+      - km: "រាប់ថយក្រោយពី {a} ចំនួន {b} ជំហាន។"
+      - km: "បើករូបតារាងដប់ដើម្បីជួយគណនា។"
+        show: highlight-ten-frame-model
+    audio: auto
+
+review:
+  items:
+    - attempt-take-away-oranges
+    - practice-sub-bond
+    - mastery-sub-equation
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

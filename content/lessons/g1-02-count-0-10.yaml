@@ -1,0 +1,152 @@
+id: g1-02-count-0-10
+order: 2
+version: 1
+title:
+  km: "រាប់ចំនួន ០ ដល់ ១០ និងលេខសូន្យ"
+  en: "Count 0–10 and Zero"
+grade: 1
+strand: number-sense
+moeysRef:
+  - "G1-U5"
+skills:
+  - count-0-10
+prerequisites:
+  - subitize-1-5
+estimatedMinutes: 6
+numerals: khmer
+steps:
+  - id: hook-rambutan-basket
+    type: intro
+    text:
+      km: "យើងទៅរើសផ្លែសាវម៉ាវដាក់កន្ត្រក។ បើកន្ត្រកទទេស្អាត គ្មានផ្លែឈើសោះ យើងសរសេរលេខ ០ (សូន្យ)។"
+    image: rambutan-basket
+    audio: auto
+
+  - id: explore-ten-frame-fill
+    type: explore
+    activity: ten-frame
+    mode: fill
+    prompt:
+      km: "ចុចដាក់ផ្លែឈើក្នុងតារាងដប់ ហើយសង្កេតចំនួនសរុប។"
+    params:
+      given: 0
+      target: 10
+    audio: auto
+
+  - id: attempt-fill-target
+    type: activity
+    activity: ten-frame
+    mode: complete
+    supports: full
+    prompt:
+      km: "ដាក់ផ្លែឈើចំនួន {target} នៅក្នុងតារាងដប់។"
+    params:
+      given: 0
+      target:
+        randInt: [5, 9]
+    answer:
+      kind: equals
+      expr: "target"
+    feedback:
+      correct:
+        km: "ល្អណាស់! អ្នកបានដាក់គ្រប់ {answer} ហើយ។"
+      misconceptions:
+        - id: off-by-one-high
+          when:
+            equals: "target + 1"
+          text:
+            km: "លើស ១ ហើយ! ចុចដកចេញ ១ វិញ។"
+    hints:
+      - km: "ជួរខាងលើមាន ៥ ប្រអប់។"
+      - km: "រាប់បន្តពី ៥ ដល់ {target}។"
+      - km: "មើលចំនួនប្រអប់ក្នុងតារាងដប់។"
+        show: highlight-empty-cells
+    audio: auto
+
+  - id: explain-zero
+    type: explain
+    text:
+      km: "លេខ ០ (សូន្យ) មានន័យថាគ្មានអ្វីសោះ។ លេខខ្មែរពីសូន្យដល់ដប់គឺ ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩ ១០។"
+    visual:
+      activity: ten-frame
+      mode: read
+      params:
+        given: 0
+        target: 0
+    mathTerms:
+      - km: "លេខសូន្យ (០)"
+        en: "Zero (0)"
+      - km: "តារាងដប់"
+        en: "Ten-frame"
+    audio: auto
+
+  - id: practice-zero-meaning
+    type: activity
+    activity: choice-pictorial
+    mode: select
+    supports: partial
+    prompt:
+      km: "កន្ត្រកទទេគ្មានផ្លែសាវម៉ាវសោះ ត្រូវនឹងលេខមួយណា?"
+    options:
+      - id: "0"
+        label: { km: "០" }
+        visual: numeral
+      - id: "1"
+        label: { km: "១" }
+        visual: numeral
+      - id: "5"
+        label: { km: "៥" }
+        visual: numeral
+      - id: "10"
+        label: { km: "១០" }
+        visual: numeral
+    answer:
+      kind: choice
+      value: "0"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! កន្ត្រកទទេគឺ ០ (សូន្យ)។"
+      misconceptions:
+        - id: picked-one
+          when:
+            choice: "1"
+          text:
+            km: "១ មានន័យថាមាន ១ ផ្លែ — បើគ្មានសោះគឺលេខ ០។"
+    hints:
+      - km: "គ្មានផ្លែឈើសោះ តើលេខណាតំណាងឱ្យគ្មាន?"
+      - km: "សូន្យ សរសេរថា ០។"
+    audio: auto
+
+  - id: mastery-count-rambutans
+    type: activity
+    activity: count-tap
+    mode: count
+    visualKind: rambutan
+    supports: none
+    prompt:
+      km: "រាប់ផ្លែសាវម៉ាវទាំងអស់ដោយចុចម្តងមួយៗ។"
+    params:
+      count:
+        randInt: [6, 10]
+    answer:
+      kind: equals
+      expr: "count"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! មានផ្លែសាវម៉ាវ {answer} ផ្លែ។"
+    hints:
+      - km: "ចុចរាប់ផ្លែសាវម៉ាវម្តងមួយៗកុំរំលង។"
+      - km: "មើលលេខចុងក្រោយដែលបង្ហាញ។"
+        show: highlight-objects
+    audio: auto
+
+review:
+  items:
+    - attempt-fill-target
+    - practice-zero-meaning
+    - mastery-count-rambutans
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

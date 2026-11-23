@@ -86,6 +86,11 @@ export function validateLessonsInDirectory(
     lessons.push(result.lesson);
   }
 
+  lessons.sort((a, b) => {
+    const orderDiff = (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER);
+    return orderDiff !== 0 ? orderDiff : a.id.localeCompare(b.id);
+  });
+
   return {
     valid: failures.length === 0,
     lessons,

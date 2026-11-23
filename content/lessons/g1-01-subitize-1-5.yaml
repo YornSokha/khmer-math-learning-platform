@@ -1,0 +1,158 @@
+id: g1-01-subitize-1-5
+order: 1
+version: 1
+title:
+  km: "មើលភ្លាមដឹងភ្លែត ១ ដល់ ៥"
+  en: "Quick Look 1–5"
+grade: 1
+strand: number-sense
+moeysRef:
+  - "G1-U3"
+skills:
+  - subitize-1-5
+prerequisites: []
+estimatedMinutes: 5
+numerals: khmer
+steps:
+  - id: hook-mango-tray
+    type: intro
+    text:
+      km: "នៅផ្សារ មីងរៀបផ្លែស្វាយលើថាស។ តើអ្នកអាចដឹងចំនួនផ្លែស្វាយភ្លាមដោយមិនបាច់រាប់ម្តងមួយៗទេ?"
+      en: "At the market, Auntie places mangoes on a tray. Can you recognize how many right away?"
+    image: mango-tray
+    audio: auto
+
+  - id: explore-tap-mangoes
+    type: explore
+    activity: count-tap
+    mode: count
+    visualKind: mango
+    prompt:
+      km: "សាកចុចលើផ្លែស្វាយនីមួយៗ ដើម្បីមើលចំនួនសរុប។"
+      en: "Tap each mango to count the total."
+    params:
+      count: 4
+    audio: auto
+
+  - id: attempt-count-mangoes
+    type: activity
+    activity: count-tap
+    mode: count
+    visualKind: mango
+    supports: full
+    prompt:
+      km: "ចុចរាប់ផ្លែស្វាយទាំងអស់នៅលើថាស។"
+      en: "Tap to count all the mangoes on the tray."
+    params:
+      count:
+        randInt: [2, 5]
+    answer:
+      kind: equals
+      expr: "count"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! មានផ្លែស្វាយ {answer} ផ្លែ។"
+      misconceptions:
+        - id: off-by-one-low
+          when:
+            equals: "count - 1"
+          text:
+            km: "នៅសល់ផ្លែស្វាយ ១ ទៀតដែលមិនទាន់ចុច។"
+    hints:
+      - km: "ចុចលើផ្លែស្វាយម្តងមួយៗពីឆ្វេងទៅស្តាំ។"
+      - km: "ពិនិត្យមើលថាផ្លែស្វាយទាំងអស់មានសញ្ញាលេខរួចហើយឬនៅ។"
+      - km: "មើលផ្លែស្វាយក្នុងប្រអប់ពណ៌ភ្លឺ។"
+        show: highlight-objects
+    audio: auto
+
+  - id: explain-subitize
+    type: explain
+    text:
+      km: "យើងអាចស្គាល់ចំនួន ១ ដល់ ៥ យ៉ាងលឿនតាមក្រុមរូបភាព ដូចជា ៣ ឬ ៤ ផ្លែស្វាយនៅជិតគ្នា។"
+    mathTerms:
+      - km: "ចំនួន ១ ដល់ ៥"
+        en: "Numbers 1 to 5"
+    audio: auto
+
+  - id: practice-subitize-flash
+    type: activity
+    activity: count-tap
+    mode: subitize
+    visualKind: mango
+    supports: partial
+    prompt:
+      km: "មើលផ្លែស្វាយលើថាសឱ្យលឿន! តើមានផ្លែស្វាយប៉ុន្មានផ្លែ?"
+    params:
+      count:
+        randInt: [1, 5]
+      flashMs: 2200
+    answer:
+      kind: equals
+      expr: "count"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! មានផ្លែស្វាយ {answer} ផ្លែ។"
+      misconceptions:
+        - id: off-by-one-high
+          when:
+            equals: "count + 1"
+          text:
+            km: "លើសមួយហើយ! ចុចមើលម្តងទៀតដើម្បីផ្ទៀងផ្ទាត់។"
+    hints:
+      - km: "ចុចប៊ូតុង មើលម្តងទៀត ដើម្បីមើលថាសផ្លែស្វាយ។"
+      - km: "សាកចងចាំជាក្រុម ២ ឬ ៣។"
+      - km: "បើករូបផ្លែស្វាយឱ្យនៅនឹងដើម្បីរាប់។"
+        show: highlight-objects
+    audio: auto
+
+  - id: mastery-choice-four
+    type: activity
+    activity: choice-pictorial
+    mode: select
+    supports: none
+    prompt:
+      km: "ជ្រើសរើសថាសណាដែលមានផ្លែស្វាយ ៤ ផ្លែ?"
+    options:
+      - id: "2"
+        label: { km: "ថាស ក" }
+        visual: mango
+        count: 2
+      - id: "4"
+        label: { km: "ថាស ខ" }
+        visual: mango
+        count: 4
+      - id: "3"
+        label: { km: "ថាស គ" }
+        visual: mango
+        count: 3
+      - id: "5"
+        label: { km: "ថាស ឃ" }
+        visual: mango
+        count: 5
+    answer:
+      kind: choice
+      value: "4"
+    feedback:
+      correct:
+        km: "ជោគជ័យ! ថាស ខ មានផ្លែស្វាយ ៤ ផ្លែ។"
+      misconceptions:
+        - id: picked-five
+          when:
+            choice: "5"
+          text:
+            km: "ថាសនោះមាន ៥ ផ្លែ — រកថាសដែលមាន ៤ ផ្លែ។"
+    hints:
+      - km: "មើលថាសដែលមាន ២ ជួរ មួយជួរមាន ២។"
+      - km: "រាប់ផ្លែស្វាយលើថាសនីមួយៗម្តងទៀត។"
+    audio: auto
+
+review:
+  items:
+    - attempt-count-mangoes
+    - practice-subitize-flash
+    - mastery-choice-four
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"

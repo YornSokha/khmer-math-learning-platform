@@ -1,0 +1,113 @@
+id: g1-03-five-and-more
+order: 3
+version: 1
+title:
+  km: "ប្រាំ និងលើសពីប្រាំ"
+  en: "Five and Some More"
+grade: 1
+strand: number-sense
+moeysRef:
+  - "G1-U6"
+skills:
+  - five-benchmark
+prerequisites:
+  - count-0-10
+estimatedMinutes: 5
+numerals: khmer
+steps:
+  - id: hook-five-fingers
+    type: intro
+    text:
+      km: "ដៃម្ខាងមានម្រាម ៥។ ពេលយើងឃើញជួរលើពេញ ៥ យើងអាចរាប់បន្តភ្លាម ដូចជា ៥ និង ២ ស្មើ ៧!"
+    image: five-and-more
+    audio: auto
+
+  - id: explore-five-plus
+    type: explore
+    activity: ten-frame
+    mode: fill
+    prompt:
+      km: "ជួរលើមាន ៥ រួចហើយ។ សាកបន្ថែមនៅជួរក្រោមដើម្បីបង្កើត ៦ ៧ ៨ ៩។"
+    params:
+      given: 5
+      target: 10
+    audio: auto
+
+  - id: attempt-five-and-some
+    type: activity
+    activity: ten-frame
+    mode: complete
+    supports: full
+    prompt:
+      km: "មាន ៥ រួចហើយ។ ត្រូវបន្ថែមប៉ុន្មានទៀតដើម្បីបាន {target}?"
+    params:
+      given: 5
+      target:
+        randInt: [6, 9]
+    answer:
+      kind: equals
+      expr: "target - 5"
+    feedback:
+      correct:
+        km: "ត្រឹមត្រូវ! ៥ និង {answer} ស្មើ {target}។"
+      misconceptions:
+        - id: copied-target
+          when:
+            equals: "target"
+          text:
+            km: "មាន ៥ រួចហើយ — រាប់តែចំនួនដែលបន្ថែមនៅជួរក្រោម។"
+    hints:
+      - km: "ចាប់ផ្តើមពី ៥ ហើយរាប់បន្តដល់ {target}។"
+      - km: "បន្ថែមម្តងមួយៗនៅជួរខាងក្រោម។"
+      - km: "មើលប្រអប់ទទេនៅជួរក្រោម។"
+        show: highlight-empty-cells
+    audio: auto
+
+  - id: explain-five-benchmark
+    type: explain
+    text:
+      km: "ប្រាំ (៥) ជាគោលដ៏ងាយស្រួល៖ ៥ និង ១ ស្មើ ៦, ៥ និង ២ ស្មើ ៧, ៥ និង ៣ ស្មើ ៨, ៥ និង ៤ ស្មើ ៩។"
+    visual:
+      activity: ten-frame
+      mode: read
+      params:
+        given: 5
+        target: 7
+    mathTerms:
+      - km: "គោល ៥"
+        en: "Benchmark 5"
+    audio: auto
+
+  - id: mastery-five-equation
+    type: activity
+    activity: equation-fill
+    mode: solve
+    supports: partial
+    prompt:
+      km: "រកលេខដែលបូកជាមួយ ៥ ដើម្បីបានផលបូក។"
+    params:
+      extra:
+        randInt: [1, 4]
+      total: 5
+    template: "5 + {extra} = □"
+    answer:
+      kind: equals
+      expr: "5 + extra"
+    feedback:
+      correct:
+        km: "ពូកែណាស់! ៥ + {extra} = {answer}។"
+    hints:
+      - km: "ចាប់ផ្តើមពី ៥ រាប់បន្តថែម {extra}។"
+      - km: "ប្រើតារាងដប់ដើម្បីមើល ៥ នៅជួរលើ និង {extra} នៅជួរក្រោម។"
+        show: highlight-ten-frame-model
+    audio: auto
+
+review:
+  items:
+    - attempt-five-and-some
+    - mastery-five-equation
+
+reviewStatus:
+  math: approved
+  khmer: draft
+  reviewer: "Pending Khmer primary teacher review"
